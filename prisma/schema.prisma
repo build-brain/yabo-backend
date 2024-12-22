@@ -1,0 +1,617 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  tradeId Int @map("trade_id")
+  // relation
+
+  prodCatId Int @map("prod_cat_id")
+  // relation
+
+  name    String
+  sort    Int
+  volume  Float
+  block   Int
+  sapCode Int?   @map("sap_code")
+  barCode Int?   @map("bar_code")
+  ikpu    Int?
+
+  taraId Int @map("tara_id")
+  // relation
+
+  time   DateTime
+  code   Int?
+  active Boolean  @default(true)
+  weight Float
+
+  csProduct  Int? @map("cs_product")
+  csId       Int  @map("cd_id")
+  // relation
+  groupId    Int  @map("group_id")
+  // relation
+  subCatId   Int  @map("sub_cat_id")
+  // relation
+  caseTypeId Int? @map("case_type_id")
+  // relation
+  csCatId    Int  @map("cd_cat_id")
+  // relation
+  csRate     Int  @map("cs_rate")
+  // relation
+
+  isMml Boolean @default(false) @map("is_mml")
+
+  unitId Int @map("unit_id")
+  // relation
+
+  pack     Int
+  segment  Int
+  brand    Int
+  producer Int
+
+  isOur   Boolean @default(true) @map("is_our")
+  isLocal Boolean @default(true) @map("is_local")
+
+  @@map("product")
+}
+
+model ProductCategory {
+  id     Int      @id @default(autoincrement())
+  name   String
+  unit   String // db
+  code   Int?
+  active Boolean  @default(true)
+  sort   Int
+  time   DateTime
+
+  @@map("product_category")
+}
+
+model PriceType {
+  id     Int @id @default(autoincrement())
+  typeId Int @map("type_id")
+  // relation
+
+  name String
+
+  filial Int
+  // relation
+
+  forClient   Int     @map("for_client")
+  currency    String // db
+  handEdit    String  @map("hand_edit")
+  code        Int
+  dealerPrice Int     @default(0) @map("dealer_price")
+  valyutaId   Int?    @map("valyuta_id")
+  active      Boolean @default(true)
+  sort        Int
+
+  @@map("price_type")
+}
+
+model Price {
+  id     Int @id @default(autoincrement())
+  typeId Int @map("type_id")
+  // relation
+
+  productId Int @map("product_id")
+  // relation
+
+  codeDoc Int? @map("code_doc")
+
+  price    Float
+  currency String // db
+
+  code   Int?
+  date   DateTime
+  active Boolean  @default(true)
+
+  @@map("price")
+}
+
+model Territory {
+  id       Int @id @default(autoincrement())
+  regionId Int @map("region_id")
+  // relation
+
+  name   String
+  code   Int
+  lat    Float
+  lon    Float
+  active Boolean @default(true)
+  sort   Int
+
+  time DateTime
+
+  @@map("territory")
+}
+
+model Currency {
+  id       Int @id @default(autoincrement())
+  regionId Int @map("region_id")
+  // relation
+
+  name   String
+  code   String
+  codeId Int?   @map("code_id")
+  // relation
+
+  title    String
+  cssClass String   @map("css_class")
+  time     DateTime
+
+  @@map("currency")
+}
+
+model DiscountManual {
+  id Int @id @default(autoincrement())
+
+  name     String
+  discount Float
+  time     DateTime
+  active   Boolean  @default(true)
+  comment  String?
+  agentId  Int?     @map("agent_id")
+  // relation
+
+  @@map("discount_manual")
+}
+
+model Bonus {
+  id Int @id @default(autoincrement())
+
+  name           String
+  bonusTypeId    Int    @map("bonus_type_id")
+  // relation
+  prodId         Int    @map("prod_id")
+  // relation[]
+  currenyId      Int?   @map("curreny_id")
+  // relation
+  priceTypeId    Int?   @map("price_type_id")
+  // relation
+  bonusProductId Int    @map("bonus_product_id")
+  // relation
+
+  bonus  Float
+  parent Int
+  // relation
+  value  Float
+
+  agentId Int? @map("agent_id")
+  // relation
+
+  cityId Int? @map("city_id")
+  // relation
+
+  minCount Float @map("min_count")
+
+  clientCatId Int? @map("client_cat_id")
+  // relation
+
+  dateFrom DateTime @map("date_from")
+  dateTo   DateTime @map("date_to")
+
+  isPublic Boolean @default(true) @map("is_public")
+  maxBonus Float   @default(0.00) @map("max_bonus")
+  manual   Int
+  comment  String?
+  active   Boolean @default(false)
+  inBlock  Int     @default(0) @map("in_block")
+
+  time DateTime
+
+  @@map("bonus")
+}
+
+model Discount {
+  id Int @id @default(autoincrement())
+
+  name           String
+  discountTypeId Int    @map("discount_type_id")
+  prodId         Int    @map("prod_id")
+  // relation[]
+
+  clientCatId Int   @map("client_cat_id")
+  // 
+  currencyId  Int?  @map("currency_id")
+  // 
+  value       Float
+  skidka      Float
+  parent      Int
+
+  dateFrom DateTime @map("date_from")
+  dateTo   DateTime @map("date_to")
+
+  budget   Float   @default(0.00)
+  isPublic Boolean @default(true) @map("is_public")
+
+  active  Boolean @default(false)
+  comment String?
+
+  priceType Int? @map("price_type")
+
+  date DateTime
+
+  @@map("discount")
+}
+
+model Agent {
+  id Int @id @default(autoincrement())
+
+  filter       Int
+  code         Int?
+  name         String
+  phone        String?
+  passportCopy String?  @map("passport_copy")
+  dateBirth    DateTime @map("date_birth")
+  address      String?
+  email        String?
+  vanSelling   Int?     @map("van_selling") //
+  audit        Int
+  cashbox      Int? //
+  date         Int
+  active       Boolean  @default(true)
+  firstVisit   DateTime @map("first_visit")
+
+  @@map("agent")
+}
+
+model Expeditor {
+  id Int @id @default(autoincrement())
+
+  code   Int?
+  cityId Int?    @map("city_id")
+  //
+  name   String
+  phone  String?
+
+  passportCopy String?  @map("passport_copy")
+  dateBirth    DateTime @map("date_birth")
+  address      String?
+  email        String?
+
+  active      Boolean  @default(true)
+  defectStore Int      @map("defect_store")
+  time        DateTime
+
+  @@map("expeditor")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name     String
+  email    String?
+  role     Int
+  // 
+  login    String
+  codeId   Int?    @map("code_id") //
+  //
+  agentId  Int?    @map("agent_id")
+  //
+  pay      Int
+  phone    String?
+  chatId   Int
+  // 
+  password String
+  code     Int
+  active   Boolean @default(true)
+
+  @@map("user")
+}
+
+model Client {
+  id Int @id @default(autoincrement())
+
+  priceTypeId   Int?    @map("price_type_id")
+  // 
+  phone         String?
+  legalName     String? @map("legal_name")
+  name          String
+  address       String
+  catId         Int     @map("cat_id")
+  // 
+  orient        String?
+  territoryId   Int     @map("territory_id")
+  regionId      Int     @map("region_id")
+  contactPerson String? @map("contact_person")
+  inn           Int?
+  balance1      Float
+  balance2      Float
+  lat           Float   @default(0)
+  lon           Float   @default(0)
+
+  allowConsig Int      @map("allow_consig") //-
+  allowCredit Int      @map("allow_credit")
+  comment     String?
+  bonusId     Int?     @map("bonus_id")
+  //
+  discountId  Int?     @map("discount_id")
+  //
+  code        String?
+  barCode     String?
+  dateExp     DateTime @map("date_exp")
+  expeditorId Int?     @map("expeditor_id")
+  // 
+  codeNds     Int?
+  audit       Boolean  @default(false)
+  date        DateTime
+  active      Boolean  @default(true)
+  account     Int?
+  bank        Int?
+  mfo         Int?
+  oked        Int?
+  pnfl        Int?
+  contract    Int?
+  channel     Int?
+  type        Int      @default(0)
+  salesCat    Int?     @map("sales_cat")
+
+  @@map("client")
+}
+
+model ClientCategory {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  code        String?
+  active      Boolean @default(true)
+  time        Int     @default(0)
+
+  @@map("client_category")
+}
+
+model ClientType {
+  id     Int     @id @default(autoincrement())
+  name   String
+  code   String?
+  active Boolean @default(true)
+
+  @@map("client_type")
+}
+
+model ClientChannel {
+  id   Int     @id @default(autoincrement())
+  name String
+  code String?
+
+  @@map("client_channel")
+}
+
+model ClientTransaction {
+  id       Int      @id @default(autoincrement())
+  clientId Int      @map("client_id")
+  // 
+  summa    Float
+  orderId  Int      @map("order_id")
+  // 
+  date     DateTime
+  dateExp  DateTime @map("date_exp")
+  comment  String?
+
+  type         Int
+  currencyId   Int   @map("currency_id")
+  // 
+  currencyRate Float @default(0.0000) @map("currency_rate")
+  convertation Float @default(0.0000)
+  comission    Float @default(0.0000)
+  computation  Float @default(0.0000)
+
+  transType   Int      @map("trans_type")
+  // 
+  expeditorId Int?     @map("expeditor_id")
+  // 
+  agentId     Int      @map("agent_id")
+  // 
+  userId      Int?     @map("user_id")
+  // 
+  history     Int?
+  // 
+  cashbox     Int
+  ofdId       Int?     @map("ofd_id")
+  // 
+  dateClose   DateTime @map("date_close")
+  tradeId     Int      @map("trade_id")
+  // 
+  code        Int?
+  confirmId   Int      @map("confirm_id")
+  confirmUser Int      @map("confirm_user")
+  time        DateTime
+
+  @@map("client_transaction")
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+
+  clientId       Int @map("client_id")
+  //
+  clientCatId    Int @map("client_cat_id")
+  //
+  territoryId    Int @map("territory_id")
+  //
+  priceTypeId    Int @map("price_type_id")
+  //
+  oldPriceTypeId Int @map("old_price_type_id")
+  // 
+
+  count     Int
+  summa     Float
+  discount  Float    @default(0.00)
+  date      DateTime
+  status    Int //r
+  subStatus Int      @map("sub_status") //r
+
+  defectId     Int?  @map("defect_id")
+  // 
+  replaceId    Int?  @map("replace_id")
+  // 
+  bonusOrderId Int?  @map("bonus_order_id")
+  // 
+  debt         Float @default(0.00)
+
+  deteLoad      DateTime @map("dete_load")
+  dateDelivered DateTime @map("date_delivered")
+  dateCancel    DateTime @map("date_cancel")
+  dateStatus    DateTime @map("date_status")
+
+  volume Float @default(0.00)
+
+  currencyId Int     @map("currency_id")
+  // 
+  unitId     Int?    @map("unit_id")
+  // 
+  agentId    Int     @map("agent_id")
+  // 
+  contractId Int?    @map("contract_id")
+  // 
+  comment2   String?
+
+  type        Int //r
+  expeditorId Int?     @map("expeditor_id")
+  // 
+  consignment Int //r
+  consigDate  DateTime @map("consig_date")
+  storeId     Int      @map("store_id")
+  // 
+  defect      Int?
+  code        Int?
+  realId      Int      @map("real_id")
+  // 
+  comment     String
+  tradeId     Int      @map("trade_id")
+  bonusType   Int      @map("bonus_type")
+
+  @@map("order")
+}
+
+model OrderDetail {
+  id Int @id @default(autoincrement())
+
+  orderId     Int @map("order_id")
+  storeId     Int @map("store_id")
+  prodCatId   Int @map("prod_cat_id")
+  clientId    Int @map("client_id")
+  clientCatId Int @map("client_cat_id")
+  territoryId Int @map("territory_id")
+
+  count      Int
+  price      Float
+  summa      Float
+  discount   Float    @default(0.00)
+  discountId Int?     @map("discount_id")
+  // 
+  volume     Float
+  currencyId Int      @map("currency_id")
+  // 
+  unitId     Int      @map("unit_id")
+  // 
+  date       DateTime
+  defect     Float    @default(0.000)
+  comment    String?
+
+  @@map("order_detail")
+}
+
+model Defect {
+  id Int @id @default(autoincrement())
+
+  defectType  Int @map("defect_type")
+  // 
+  orderId     Int @map("order_id")
+  // 
+  replaceId   Int @map("replace_id")
+  // 
+  clientCatId Int @map("client_cat_id")
+  // 
+  clientId    Int @map("client_id")
+  // 
+  agentId     Int @map("agent_id")
+  // 
+  cityId      Int @map("city_id")
+  // 
+
+  count         Int
+  priceTypeId   Int      @map("price_type_id")
+  // 
+  summa         Float
+  discount      Float
+  volume        Float
+  expeditorId   Int      @map("")
+  // 
+  date          DateTime
+  dateDelivered DateTime @map("date_delivered")
+  status        Int
+  comment       String?
+  currencyId    Int      @map("currency_id")
+  // 
+  active        Boolean
+  reason        String?
+
+  @@map("defect")
+}
+
+model DefectDetail {
+  id Int @id @default(autoincrement())
+
+  orderDefectId Int      @map("order_defect_id")
+  prodCatId     Int      @map("prod_cat_id")
+  productId     Int      @map("product_id")
+  count         Int
+  price         Float
+  summa         Float
+  volume        Float
+  unit          Int
+  expDate       DateTime @map("exp_date")
+  reason        String?
+
+  @@map("defect_detail")
+}
+
+model Replace {
+  id Int @id @default(autoincrement())
+
+  replaceType   Int      @map("replace_type")
+  // 
+  orderId       Int      @map("order_id")
+  // 
+  defectId      Int      @map("defect_id")
+  // 
+  clientCatId   Int      @map("client_cat_id")
+  // 
+  clientId      Int      @map("client_id")
+  // 
+  agentId       Int      @map("agent_id")
+  // 
+  cityId        Int      @map("city_id")
+  // 
+  count         Int
+  priceType     Int      @map("price_type")
+  //
+  summa         Float
+  volume        Float
+  expeditorId   Int      @map("expeditor_id")
+  // 
+  date          DateTime
+  dateDelivered DateTime @map("date_delivered")
+  status        Int
+  comment       String?
+  currencyId    Int      @map("currency_id")
+  // 
+  reason        String?
+
+  @@map("replace")
+}
