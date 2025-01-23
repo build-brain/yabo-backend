@@ -1,0 +1,47 @@
+model Store {
+  id Int @id @default(autoincrement())
+
+  name       String
+  code       Int
+  stockman   Int
+  count      Int
+  vanSelling Int    @map("van_selling")
+  minusCount Int    @map("minus_count")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  detail   StoreDetail?
+  Purchase Purchase[]
+
+  @@map("store")
+  PurchaseRefund PurchaseRefund[]
+  Corrector Corrector[]
+  Excretion Excretion[]
+}
+
+model StoreDetail {
+  id Int @id @default(autoincrement())
+
+  count Int
+
+  storeId Int   @unique @map("store_id")
+  store   Store @relation(fields: [storeId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  isActive Boolean @default(true) @map("is_active")
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("store_detail")
+}

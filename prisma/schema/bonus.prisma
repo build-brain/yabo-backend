@@ -1,0 +1,126 @@
+model Bonus {
+  id Int @id @default(autoincrement())
+
+  name    String
+  comment String
+  bonus   Float
+  value   Float
+  parent  Int
+  manual  Int
+  time    DateTime
+
+  minCount    Float @map("min_count")
+  clientCatId Int   @map("client_cat_id")
+
+  dateFrom DateTime @map("date_from")
+  dateTo   DateTime @map("date_to")
+
+  maxBonus Float   @default(0) @map("max_bonus")
+  isPublic Boolean @default(true) @map("is_public")
+  inBlock  Int     @default(0) @map("in_block")
+  isActive Boolean @default(false) @map("is_active")
+
+  bonusTypeId Int       @map("bonus_type_id")
+  bonusType   BonusType @relation(fields: [bonusTypeId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  priceTypeId Int       @map("price_type_id")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  // bonusProductId Int     @map("bonus_product_id")
+  // bonusProduct   Product @relation(fields: [bonusProductId], references: [id])
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  cityId Int  @map("city_id")
+  city   City @relation(fields: [cityId], references: [id])
+
+  clients    Client[]
+  BonusOrder BonusOrder[]
+
+  @@map("bonus")
+}
+
+model BonusType {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String
+
+  bonuses Bonus[]
+
+  @@map("bonus_type")
+}
+
+model BonusOrder {
+  id Int @id @default(autoincrement())
+
+  count  Int
+  volume Float
+
+  // bonusOrderId Int   @map("bonus_order_id")
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  bonusId Int   @map("bonus_id")
+  bonus   Bonus @relation(fields: [bonusId], references: [id])
+
+  unitId Int @map("unit_id")
+  // unit Unit @relation(fields: [unitId], references: [id])
+
+  currencyId Int      @map("curreny_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  storeId Int @map("store_id")
+  // store Store @relation(fields: [storeId], references: [id])
+
+  detail BonusOrderDetail?
+
+  @@map("bonus_order")
+}
+
+model BonusOrderDetail {
+  id Int @id @default(autoincrement())
+
+  count  Int
+  volume Float
+
+  // productId    Int   @map("product_id")
+  // product Product @relation(fields: [productId], references: [id])
+
+  // prodCatId    Int   @map("prod_cat_id")
+  // productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  // orderId      Int   @map("order_id")
+  // order Order @relation(fields: [orderId], references: [id])
+
+  // bonusId      Int   @map("bonus_id")
+  // bonus Bonus @relation(fields: [bonusId], references: [id])
+
+  bonusOrderId Int        @unique @map("bonus_order_id")
+  bonusOrder   BonusOrder @relation(fields: [bonusOrderId], references: [id], onDelete: Cascade)
+
+  // unitId Int @map("unit_id")
+  // unit Unit @relation(fields: [unitId], references: [id])
+
+  // currencyId Int      @map("curreny_id")
+  // currency   Currency @relation(fields: [currencyId], references: [id])
+
+  // storeId Int @map("store_id")
+  // store Store @relation(fields: [storeId], references: [id])
+
+  @@map("bonus_order_detail")
+}

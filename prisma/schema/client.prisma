@@ -1,0 +1,181 @@
+model Client {
+  id Int @id @default(autoincrement())
+
+  name      String @db.VarChar(255)
+  comment   String @db.Text
+  legalName String @map("legal_name") @db.VarChar(255)
+
+  address  String @db.VarChar(255)
+  landmark String @db.VarChar(255)
+  lat      Float
+  long     Float
+
+  phone         String @db.VarChar(20)
+  addPhone      String @map("add_phone") @db.VarChar(20)
+  contactPerson String @map("contact_person") @db.VarChar(255)
+
+  inn      String @db.VarChar(20)
+  code     String @db.VarChar(20)
+  pinfl    String @db.VarChar(20)
+  contract String @db.VarChar(255)
+
+  account String @db.VarChar(255)
+  bank    String @db.VarChar(255)
+  mfo     String @db.VarChar(20)
+  oked    String @db.VarChar(20)
+  codeNds String @map("code_nds") @db.VarChar(20)
+
+  balance1 Float
+  balance2 Float
+
+  barCode String   @map("bar_code") @db.VarChar(255)
+  dateExp DateTime @map("date_exp")
+
+  allowConsig Boolean @default(false) @map("allow_consig")
+  allowCredit Boolean @default(false) @map("allow_credit")
+
+  audit    Boolean @default(false)
+  isActive Boolean @default(false) @map("is_active")
+
+  regionId Int    @map("region_id")
+  region   Region @relation(fields: [regionId], references: [id])
+
+  territoryId Int       @map("territory_id")
+  terrtory    Territory @relation(fields: [territoryId], references: [id])
+
+  categoryId Int            @map("category_id")
+  category   ClientCategory @relation(fields: [categoryId], references: [id])
+
+  typeId Int        @map("type_id")
+  type   ClientType @relation(fields: [typeId], references: [id])
+
+  channelId Int           @map("channel_id")
+  channel   ClientChannel @relation(fields: [channelId], references: [id])
+
+  classId Int         @map("class_id")
+  class   ClientClass @relation(fields: [classId], references: [id])
+
+  bonusId Int   @map("bonus_id")
+  bonus   Bonus @relation(fields: [bonusId], references: [id])
+
+  discountId Int      @map("discount_id")
+  discount   Discount @relation(fields: [discountId], references: [id])
+
+  expeditorId Int       @map("expeditor_id")
+  expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders       Order[]
+  orderDetails OrderDetail[]
+  defects      Defect[]
+  transactions ClientTransaction[]
+  replaces     Replace[]
+  visitings    Visiting[]
+
+  @@map("client")
+}
+
+model ClientCategory {
+  id Int @id @default(autoincrement())
+
+  code        String? @db.VarChar(20)
+  name        String  @db.VarChar(255)
+  color       String  @default("#000000") @db.VarChar(7)
+  description String? @db.Text
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  clients      Client[]
+  orders       Order[]
+  orderDetails OrderDetail[]
+  defects      Defect[]
+  replaces     Replace[]
+
+  @@map("client_category")
+}
+
+model ClientType {
+  id Int @id @default(autoincrement())
+
+  name  String  @db.VarChar(255)
+  code  String? @db.VarChar(20)
+  color String  @default("#000000") @db.VarChar(7)
+
+  isActive Boolean @default(true) @map("is_active")
+
+  clients Client[]
+
+  @@map("client_type")
+}
+
+model ClientChannel {
+  id Int @id @default(autoincrement())
+
+  code String @db.VarChar(20)
+  name String @db.VarChar(255)
+
+  clients Client[]
+
+  @@map("client_channel")
+}
+
+model ClientClass {
+  id Int @id @default(autoincrement())
+
+  name String @db.VarChar(255)
+
+  clients Client[]
+
+  @@map("client_class")
+}
+
+model ClientTransaction {
+  id Int @id @default(autoincrement())
+
+  code    Int
+  history Int
+  comment String @db.Text
+
+  sum          Float
+  convertation Float @default(0)
+  comission    Float @default(0)
+  computation  Float @default(0)
+  currencyRate Float @default(0) @map("currency_rate")
+
+  dateExp   DateTime @map("date_exp")
+  dateClose DateTime @map("date_close")
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  cashboxId Int     @map("cashbox_id")
+  cashbox   Cashbox @relation(fields: [cashboxId], references: [id])
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  expeditorId Int       @map("expeditor_id")
+  expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
+
+  confirmId   Int @map("confirm_id")
+  confirmUser Int @map("confirm_user")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("client_transaction")
+}

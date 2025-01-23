@@ -1,0 +1,102 @@
+model User {
+  id Int @id @default(autoincrement())
+
+  name     String
+  email    String
+  phone    String
+  login    String
+  password String
+
+  code Int
+  pay  Int
+  role Role
+
+  codeId Int @map("code_id")
+  // relation
+
+  chatId Int @map("chat_id")
+  // relation
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  isActive Boolean @default(true) @map("is_active")
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  expeditor    Expeditor?
+  transactions ClientTransaction[]
+
+  @@map("user")
+}
+
+model Agent {
+  id Int @id @default(autoincrement())
+
+  filter Int
+  code   Int
+
+  name         String
+  phone        String
+  email        String
+  address      String
+  passportCopy String @map("passport_copy")
+
+  dateBirth  DateTime @map("date_birth")
+  firstVisit DateTime @map("first_visit")
+
+  audit      Int
+  cashbox    Int
+  vanSelling Int @map("van_selling")
+
+  isActive Boolean @default(true)
+
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user            User[]
+  transactions    ClientTransaction[]
+  bonuses         Bonus[]
+  discountManuals DiscountManual[]
+  Defect          Defect[]
+  Replace         Replace[]
+  Visiting        Visiting[]
+
+  @@map("agent")
+}
+
+model Expeditor {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name         String
+  phone        String
+  email        String
+  address      String
+  passportCopy String @map("passport_copy")
+
+  dateBirth DateTime @map("date_birth")
+
+  code        Int
+  defectStore Int @map("defect_store")
+
+  cityId Int @map("city_id")
+  // relation
+
+  isActive Boolean @default(true)
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  clients      Client[]
+  transactions ClientTransaction[]
+  Replace      Replace[]
+
+  @@map("expeditor")
+}

@@ -1,0 +1,180 @@
+model Product {
+  id Int @id @default(autoincrement())
+
+  // Main data
+
+  name String
+  code String?
+
+  volume Float
+  weight Float
+
+  packsPerBox  Int @map("packs_per_box")
+  quantPerPack Int @map("quant_per_pack")
+
+  prodCatId Int             @map("prod_cat_id")
+  prodCat   ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
+
+  isActive Boolean @default(true) @map("is_active")
+
+  // Additional data
+
+  sort        Int
+  storePeriod Int @map("store_period")
+
+  subCatId Int                @map("sub_cat_id")
+  subCat   ProductSubCategory @relation(fields: [subCatId], references: [id])
+
+  prodGrpId Int          @map("prod_grp_id")
+  prodGrp   ProductGroup @relation(fields: [prodGrpId], references: [id])
+
+  ikpu    Int
+  segment Int
+
+  block Int
+  pack  Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sapCode   Int @map("sap_code")
+  barCode   Int @map("bar_code")
+  csProduct Int @map("cs_product")
+
+  isMml   Boolean @default(false) @map("is_mml")
+  isOur   Boolean @default(true) @map("is_our")
+  isLocal Boolean @default(true) @map("is_local")
+
+  tradeId Int @map("trade_id")
+  // relation
+
+  brandId Int @map("brand_id")
+  // relation
+
+  producerId Int @map("producer_id")
+  // relation
+
+  taraId Int @map("tara_id")
+  // reation
+
+  cdId Int @map("cd_id")
+  // reation
+
+  caseTypeId Int @map("case_type_id")
+  // reation
+
+  CdCatId Int @map("cd_cat_id")
+  // reation
+
+  CsRate Int @map("cs_rate")
+  // reation
+
+  prices               Price[]
+  bonuses              Bonus[]
+  DefectDetail         DefectDetail[]
+  ReplaceDetail        ReplaceDetail[]
+  BonusOrder           BonusOrder[]
+  StoreDetail          StoreDetail[]
+  PurchaseDetail       PurchaseDetail[]
+  PurchaseRefundDetail PurchaseRefundDetail[]
+  ProductCatGroup      ProductCatGroup[]
+  Corrector            Corrector[]
+  Excretion            Excretion[]
+
+  @@map("product")
+}
+
+model ProductCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+  sort Int
+
+  isActive Boolean @default(true) @map("is_active")
+
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  bonusOrders           BonusOrder[]
+  orderDetails          OrderDetail[]
+  storeDetails          StoreDetail[]
+  defectDetails         DefectDetail[]
+  replaceDetails        ReplaceDetail[]
+  purchaseDetails       PurchaseDetail[]
+  purchaseRefundDetails PurchaseRefundDetail[]
+  Excretion             Excretion[]
+  Product               Product[]
+
+  @@map("product_category")
+}
+
+model ProductSubCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+  sort Int
+
+  isActive Boolean @default(true) @map("is_active")
+
+  unitId  Int       @map("unit_id")
+  unit    Unit      @relation(fields: [unitId], references: [id])
+  Product Product[]
+
+  @@map("product_sub_category")
+}
+
+model ProductCaseType {
+  id Int @id @default(autoincrement())
+
+  name  String
+  short String
+  code  Int
+
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("product_case_type")
+}
+
+model ProductCatGroup {
+  id Int @id @default(autoincrement())
+
+  name String
+  sort Int
+  code Int
+
+  isActive Boolean @default(true) @map("is_active")
+
+  unitId Int @map("unit_id")
+  // unit Unit     @relation(fields: [unitId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("product_cat_group")
+}
+
+model ProductGroup {
+  id Int @id @default(autoincrement())
+
+  name String
+  code Int
+
+  isActive Boolean @default(true) @map("is_active")
+
+  csId    Int       @map("cs_id")
+  Product Product[]
+
+  @@map("product_group")
+}

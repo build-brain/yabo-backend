@@ -1,0 +1,980 @@
+CREATE TABLE "Product" (
+  "id" serial PRIMARY KEY,
+  "trade_id" Int,
+  "prod_cat_id" Int,
+  "name" String,
+  "sort" Int,
+  "volume" Float,
+  "block" Int,
+  "sap_code" Int,
+  "bar_code" Int,
+  "ikpu" Int,
+  "tara_id" Int,
+  "time" Timestamp,
+  "code" Int,
+  "active" Boolean DEFAULT true,
+  "weight" Float,
+  "cs_product" Int,
+  "cd_id" Int,
+  "group_id" Int,
+  "sub_cat_id" Int,
+  "case_type_id" Int,
+  "cd_cat_id" Int,
+  "cs_rate" Int,
+  "is_mml" Boolean DEFAULT false,
+  "unit_id" Int,
+  "pack" Int,
+  "segment" Int,
+  "brand" Int,
+  "producer" Int,
+  "is_our" Boolean DEFAULT true,
+  "is_local" Boolean DEFAULT true,
+  "prices" Price,
+  "bonuses" Bonus,
+  "discounts" Discount,
+  "defect_details" DefectDetail,
+  "replace_details" ReplaceDetail,
+  "bonus_orders" BonusOrder,
+  "bonus_order_details" BonusOrderDetail,
+  "store_details" StoreDetail,
+  "purchase_details" PurchaseDetail,
+  "purchase_refund_details" PurchaseRefundDetail,
+  "product_cat_groups" ProductCatGroup,
+  "correctors" Corrector,
+  "excretions" Excretion
+);
+
+CREATE TABLE "ProductCategory" (
+  "id" serial PRIMARY KEY,
+  "name" String,
+  "unit" String,
+  "code" Int,
+  "active" Boolean DEFAULT true,
+  "sort" Int,
+  "time" Timestamp,
+  "products" Product,
+  "defect_details" DefectDetail,
+  "replace_details" ReplaceDetail,
+  "bonus_orders" BonusOrder,
+  "bonus_order_details" BonusOrderDetail,
+  "store_details" StoreDetail,
+  "purchase_details" PurchaseDetail,
+  "purchase_refund_details" PurchaseRefundDetail,
+  "excretions" Excretion
+);
+
+CREATE TABLE "PriceType" (
+  "id" serial PRIMARY KEY,
+  "type_id" Int,
+  "name" String,
+  "filial" Int,
+  "for_client" Int,
+  "currency" String,
+  "hand_edit" String,
+  "code" Int,
+  "dealer_price" Int DEFAULT 0,
+  "valyuta_id" Int,
+  "active" Boolean DEFAULT true,
+  "sort" Int,
+
+  "prices" Price,
+  "bonuses" Bonus,
+  "clients" Client,
+  "orders" Order,
+  "defects" Defect,
+  "purchases" Purchase,
+  "purchase_refunds" PurchaseRefund
+);
+
+CREATE TABLE "Price" (
+  "id" serial PRIMARY KEY,
+  "type_id" Int,
+  "product_id" Int,
+  "code_doc" Int,
+  "price" Float,
+  "currency" String,
+  "code" Int,
+  "date" Timestamp,
+  "active" Boolean DEFAULT true,
+  "type" PriceType,
+  "product" Product
+);
+
+CREATE TABLE "Territory" (
+  "id" serial PRIMARY KEY,
+  "region_id" Int,
+  "name" String,
+  "code" Int,
+  "lat" Float DEFAULT 0,
+  "lon" Float DEFAULT 0,
+  "active" Boolean DEFAULT true,
+  "sort" Int,
+  "time" Timestamp,
+  "orders" Order
+);
+
+CREATE TABLE "Currency" (
+  "id" serial PRIMARY KEY,
+  "region_id" Int,
+  "name" String,
+  "code" String,
+  "code_id" Int,
+  "title" String,
+  "css_class" String,
+  "time" Timestamp,
+  "bonuses" Bonus,
+  "discount" Discount,
+  "client_transactions" ClientTransaction,
+  "orders" Order,
+  "defects" Defect,
+  "replaces" Replace,
+  "bonus_orders" BonusOrder,
+  "purchase_refunds" PurchaseRefund
+);
+
+CREATE TABLE "DiscountManual" (
+  "id" serial PRIMARY KEY,
+  "name" String,
+  "discount" Float,
+  "time" Timestamp,
+  "active" Boolean DEFAULT true,
+  "comment" String,
+  "agent_id" Int,
+  "agent" Agent
+);
+
+CREATE TABLE "Bonus" (
+  "id" serial PRIMARY KEY,
+  "name" String,
+  "bonus_type_id" Int,
+  "prod_id" Int,
+  "currency_id" Int,
+  "price_type_id" Int,
+  "bonus_product_id" Int,
+  "bonus" Float,
+  "parent" Int,
+  "value" Float,
+  "agent_id" Int,
+  "city_id" Int,
+  "min_count" Float,
+  "client_cat_id" Int,
+  "date_from" Timestamp,
+  "date_to" Timestamp,
+  "is_public" Boolean DEFAULT true,
+  "max_bonus" Float DEFAULT 0,
+  "manual" Int,
+  "comment" String,
+  "active" Boolean DEFAULT false,
+  "in_block" Int DEFAULT 0,
+  "time" Timestamp,
+  "product" Product,
+  "currency" Currency,
+  "price_type" PriceType,
+  "agent" Agent,
+  "client_category" ClientCategory
+);
+
+CREATE TABLE "Discount" (
+  "id" serial PRIMARY KEY,
+  "name" String,
+  "discount_type_id" Int,
+  "prod_id" Int,
+  "client_cat_id" Int,
+  "currency_id" Int,
+  "value" Float,
+  "skidka" Float,
+  "parent" Int,
+  "date_from" Timestamp,
+  "date_to" Timestamp,
+  "budget" Float DEFAULT 0,
+  "is_public" Boolean DEFAULT true,
+  "active" Boolean DEFAULT false,
+  "comment" String,
+  "price_type" Int,
+  "date" Timestamp,
+  "currency" Currency,
+  "client_category" ClientCategory
+);
+
+CREATE TABLE "Agent" (
+  "id" serial PRIMARY KEY,
+  "filter" Int,
+  "code" Int,
+  "name" String,
+  "phone" String,
+  "passport_copy" String,
+  "date_birth" Timestamp,
+  "address" String,
+  "email" String,
+  "van_selling" Int,
+  "audit" Int,
+  "cashbox" Int,
+  "date" Int,
+  "active" Boolean DEFAULT true,
+  "first_visit" Timestamp,
+  "discount_manuals" DiscountManual,
+  "bonuses" Bonus
+);
+
+CREATE TABLE "Expeditor" (
+  "id" serial PRIMARY KEY,
+  "code" Int,
+  "city_id" Int,
+  "name" String,
+  "phone" String,
+  "passport_copy" String,
+  "date_birth" Timestamp,
+  "address" String,
+  "email" String,
+  "active" Boolean DEFAULT true,
+  "defect_store" Int,
+  "time" Timestamp,
+  "clients" Client
+);
+
+CREATE TABLE "User" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" String,
+  "email" String,
+  "role" Int,
+  "login" String,
+  "code_id" Int,
+  "agent_id" Int,
+  "pay" Int,
+  "phone" String,
+  "chat_id" Int,
+  "password" String,
+  "code" Int,
+  "active" Boolean DEFAULT true
+);
+
+CREATE TABLE "Client" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "price_type_id" Int,
+  "phone" String,
+  "legal_name" String,
+  "name" String,
+  "address" String,
+  "cat_id" Int,
+  "orient" String,
+  "territory_id" Int,
+  "region_id" Int,
+  "contact_person" String,
+  "inn" Int,
+  "balance1" Float,
+  "balance2" Float,
+  "lat" Float DEFAULT 0,
+  "lon" Float DEFAULT 0,
+  "allow_consig" Int,
+  "allow_credit" Int,
+  "comment" String,
+  "bonus_id" Int,
+  "discount_id" Int,
+  "code" String,
+  "bar_code" String,
+  "date_exp" Datetime,
+  "expeditor_id" Int,
+  "code_nds" Int,
+  "audit" Boolean DEFAULT false,
+  "date" Datetime,
+  "active" Boolean DEFAULT true,
+  "account" Int,
+  "bank" Int,
+  "mfo" Int,
+  "oked" Int,
+  "pnfl" Int,
+  "contract" Int,
+  "channel" Int,
+  "type" Int DEFAULT 0,
+  "sales_cat" Int
+);
+
+CREATE TABLE "ClientCategory" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" String,
+  "description" String,
+  "code" String,
+  "active" Boolean DEFAULT true,
+  "time" Int DEFAULT 0
+);
+
+CREATE TABLE "ClientType" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" String,
+  "code" String,
+  "active" Boolean DEFAULT true
+);
+
+CREATE TABLE "ClientChannel" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" String,
+  "code" String
+);
+
+CREATE TABLE "ClientTransaction" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "client_id" Int,
+  "summa" Float,
+  "order_id" Int,
+  "date" Datetime,
+  "date_exp" Datetime,
+  "comment" String,
+  "type" Int,
+  "currency_id" Int,
+  "currency_rate" Float DEFAULT 0,
+  "convertation" Float DEFAULT 0,
+  "comission" Float DEFAULT 0,
+  "computation" Float DEFAULT 0,
+  "trans_type" Int,
+  "expeditor_id" Int,
+  "agent_id" Int,
+  "user_id" Int,
+  "history" Int,
+  "cashbox_id" Int,
+  "ofd_id" Int,
+  "date_close" Datetime,
+  "trade_id" Int,
+  "code" Int,
+  "confirm_id" Int,
+  "confirm_user" Int,
+  "time" Datetime
+);
+
+CREATE TABLE "Order" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "client_id" Int,
+  "client_cat_id" Int,
+  "territory_id" Int,
+  "price_type_id" Int,
+  "old_price_type_id" Int,
+  "count" Int,
+  "summa" Float,
+  "discount" Float DEFAULT 0,
+  "date" Datetime,
+  "status" Int,
+  "sub_status" Int,
+  "defect_id" Int,
+  "replace_id" Int,
+  "bonus_order_id" Int,
+  "debt" Float DEFAULT 0,
+  "dete_load" Datetime,
+  "date_delivered" Datetime,
+  "date_cancel" Datetime,
+  "date_status" Datetime,
+  "volume" Float DEFAULT 0,
+  "currency_id" Int,
+  "unit_id" Int,
+  "agent_id" Int,
+  "contract_id" Int,
+  "comment2" String,
+  "type" Int,
+  "expeditor_id" Int,
+  "consignment" Int,
+  "consig_date" Datetime,
+  "store_id" Int,
+  "code" Int,
+  "real_id" Int,
+  "comment" String,
+  "trade_id" Int,
+  "bonus_type" Int
+);
+
+CREATE TABLE "OrderDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "order_id" Int,
+  "store_id" Int,
+  "prod_cat_id" Int,
+  "client_id" Int,
+  "client_cat_id" Int,
+  "territory_id" Int,
+  "count" Int,
+  "price" Float,
+  "summa" Float,
+  "discount" Float DEFAULT 0,
+  "discount_id" Int,
+  "volume" Float,
+  "currency_id" Int,
+  "unit_id" Int,
+  "date" Datetime,
+  "defect" Float DEFAULT 0,
+  "comment" String
+);
+
+CREATE TABLE "Defect" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "defect_type" Int,
+  "order_id" Int,
+  "replace_id" Int,
+  "client_cat_id" Int,
+  "client_id" Int,
+  "agent_id" Int,
+  "city_id" Int,
+  "count" Int,
+  "price_type_id" Int
+);
+
+CREATE TABLE "DefectDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "order_defect_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "price" Float,
+  "summa" Float,
+  "volume" Float,
+  "unit" Int,
+  "exp_date" DateTime,
+  "reason" String
+);
+
+CREATE TABLE "Replace" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "replace_type" Int,
+  "order_id" Int,
+  "defect_id" Int,
+  "client_cat_id" Int,
+  "client_id" Int,
+  "agent_id" Int,
+  "city_id" Int,
+  "count" Int,
+  "price_type" Int,
+  "summa" Float,
+  "volume" Float,
+  "expeditor_id" Int,
+  "date" DateTime,
+  "date_delivered" DateTime,
+  "status" Int,
+  "comment" String,
+  "currency_id" Int,
+  "reason" String
+);
+
+CREATE TABLE "ReplaceDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "replace_id" Int,
+  "order_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "price" Float,
+  "summa" Float,
+  "volume" Float,
+  "unit" Int,
+  "store_id" Int
+);
+
+CREATE TABLE "BonusOrder" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "bonus_order_id" Int,
+  "bonus_id" Int,
+  "order_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "volume" Float,
+  "curreny_id" Int,
+  "unit_id" Int,
+  "store_id" Int
+);
+
+CREATE TABLE "BonusOrderDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "bonus_order_id" Int,
+  "bonus_id" Int,
+  "order_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "volume" Float,
+  "curreny_id" Int,
+  "unit_id" Int,
+  "store_id" Int
+);
+
+CREATE TABLE "Store" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" String,
+  "code" Int,
+  "van_selling" Int,
+  "stockman" Int,
+  "count" Int,
+  "time" DateTime,
+  "active" Boolean,
+  "minus_count" Int
+);
+
+CREATE TABLE "StoreDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "store_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "time" DateTime,
+  "active" Boolean
+);
+
+CREATE TABLE "Purchase" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "shipped_id" Int,
+  "code" Int,
+  "filial_id" Int,
+  "count" Int,
+  "summa" Float,
+  "date" DateTime,
+  "status" Int,
+  "debt" Int,
+  "price_type_id" Int,
+  "time" DateTime,
+  "comment" String,
+  "store_id" Int,
+  "num_purchase" Int
+);
+
+CREATE TABLE "PurchaseDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "purchase_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "price" Float,
+  "summa" Float,
+  "date" DateTime,
+  "active" Boolean,
+  "volume" Float,
+  "currency_id" Int,
+  "unit_id" Int
+);
+
+CREATE TABLE "PurchaseRefund" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "filial_id" Int,
+  "count" Int,
+  "price_type_id" Int,
+  "summa" Float,
+  "date" DateTime,
+  "status" Int,
+  "type" Int,
+  "debt" Int,
+  "time" DateTime,
+  "active" Boolean,
+  "comment" String,
+  "currency_id" Int,
+  "store_id" Int,
+  "shipped_id" Int,
+  "code" Int
+);
+
+CREATE TABLE "PurchaseRefundDetail" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "purchase_id" Int,
+  "prod_cat_id" Int,
+  "product_id" Int,
+  "count" Int,
+  "price" Float,
+  "summa" Float,
+  "time" DateTime,
+  "active" Boolean DEFAULT true,
+  "volume" Float,
+  "currency_id" Int,
+  "unit_id" Int
+);
+
+CREATE TABLE "ProductCaseType" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" varchar,
+  "short" varchar,
+  "code" int,
+  "active" boolean DEFAULT true
+);
+
+CREATE TABLE "ProductCatGroup" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "product_id" int,
+  "name" varchar,
+  "sort" int,
+  "unit_id" int,
+  "code" int,
+  "time" datetime,
+  "active" boolean DEFAULT true
+);
+
+CREATE TABLE "ProductGroup" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "active" boolean DEFAULT true,
+  "name" varchar,
+  "code" int,
+  "cs_id" int
+);
+
+CREATE TABLE "ProductSubCategory" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" varchar,
+  "sort" int,
+  "unit_id" int,
+  "code" int,
+  "active" boolean DEFAULT true
+);
+
+CREATE TABLE "Visiting" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "client_id" int,
+  "day" int,
+  "sort" int,
+  "time" datetime,
+  "agent_id" int,
+  "active" boolean DEFAULT true,
+  "week_type" int DEFAULT 0
+);
+
+CREATE TABLE "Cashbox" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" varchar,
+  "currency_id" int,
+  "active" boolean DEFAULT true,
+  "time" datetime
+);
+
+CREATE TABLE "Consumption" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "cat_parent_id" int,
+  "cat_child_id" int,
+  "summa" float,
+  "currency_id" int,
+  "comment" varchar,
+  "date" datetime,
+  "time" datetime,
+  "cashbox_id" int,
+  "type" int,
+  "disp_id" int,
+  "ship_trans_id" int,
+  "active" boolean DEFAULT true
+);
+
+CREATE TABLE "Corrector" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "name" varchar,
+  "comment" varchar,
+  "product_id" int,
+  "parent" int,
+  "count" int,
+  "store_id" int,
+  "date" datetime,
+  "timestamp" datetime,
+  "price" float,
+  "type" int,
+  "armor" float,
+  "available" boolean DEFAULT true,
+  "fact" int
+);
+
+CREATE TABLE "Excretion" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "store_id" int,
+  "date" datetime,
+  "product_id" int,
+  "prod_cat_id" int,
+  "count" int,
+  "comment" varchar,
+  "responsible" boolean,
+  "parent_time" datetime,
+  "code" int,
+  "timestamp" datetime
+);
+
+CREATE TABLE "Unit" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "short_name" varchar,
+  "name" varchar
+);
+
+COMMENT ON TABLE "Product" IS 'product';
+
+COMMENT ON TABLE "ProductCategory" IS 'product_category';
+
+COMMENT ON TABLE "PriceType" IS 'price_type';
+
+COMMENT ON TABLE "Price" IS 'price';
+
+COMMENT ON TABLE "Territory" IS 'territory';
+
+COMMENT ON TABLE "Currency" IS 'currency';
+
+COMMENT ON TABLE "DiscountManual" IS 'discount_manual';
+
+COMMENT ON TABLE "Bonus" IS 'bonus';
+
+COMMENT ON TABLE "Discount" IS 'discount';
+
+COMMENT ON TABLE "Agent" IS 'agent';
+
+COMMENT ON TABLE "Expeditor" IS 'expeditor';
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("group_id") REFERENCES "ProductGroup" ("id");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("sub_cat_id") REFERENCES "ProductSubCategory" ("id");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("prices");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("bonuses");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("discounts");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("defect_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("replace_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("bonus_orders");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("bonus_order_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("store_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("purchase_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("purchase_refund_details");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("product_cat_groups");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("correctors");
+
+ALTER TABLE "Product" ADD FOREIGN KEY ("id") REFERENCES "Product" ("excretions");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("products");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("defect_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("replace_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("bonus_orders");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("bonus_order_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("store_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("purchase_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("purchase_refund_details");
+
+ALTER TABLE "ProductCategory" ADD FOREIGN KEY ("id") REFERENCES "ProductCategory" ("excretions");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("prices");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("bonuses");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("clients");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("orders");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("defects");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("purchases");
+
+ALTER TABLE "PriceType" ADD FOREIGN KEY ("id") REFERENCES "PriceType" ("purchase_refunds");
+
+ALTER TABLE "Price" ADD FOREIGN KEY ("type") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "Price" ADD FOREIGN KEY ("product") REFERENCES "Product" ("id");
+
+ALTER TABLE "Territory" ADD FOREIGN KEY ("id") REFERENCES "Territory" ("orders");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("bonuses");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("discount");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("client_transactions");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("orders");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("defects");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("replaces");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("bonus_orders");
+
+ALTER TABLE "Currency" ADD FOREIGN KEY ("id") REFERENCES "Currency" ("purchase_refunds");
+
+ALTER TABLE "DiscountManual" ADD FOREIGN KEY ("agent") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Bonus" ADD FOREIGN KEY ("product") REFERENCES "Product" ("id");
+
+ALTER TABLE "Bonus" ADD FOREIGN KEY ("currency") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Bonus" ADD FOREIGN KEY ("price_type") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "Bonus" ADD FOREIGN KEY ("agent") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Bonus" ADD FOREIGN KEY ("client_category") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Discount" ADD FOREIGN KEY ("currency") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Discount" ADD FOREIGN KEY ("client_category") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Agent" ADD FOREIGN KEY ("id") REFERENCES "Agent" ("discount_manuals");
+
+ALTER TABLE "Agent" ADD FOREIGN KEY ("id") REFERENCES "Agent" ("bonuses");
+
+ALTER TABLE "Expeditor" ADD FOREIGN KEY ("id") REFERENCES "Expeditor" ("clients");
+
+ALTER TABLE "User" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Client" ADD FOREIGN KEY ("price_type_id") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "Client" ADD FOREIGN KEY ("cat_id") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Client" ADD FOREIGN KEY ("bonus_id") REFERENCES "Bonus" ("id");
+
+ALTER TABLE "Client" ADD FOREIGN KEY ("discount_id") REFERENCES "Discount" ("id");
+
+ALTER TABLE "Client" ADD FOREIGN KEY ("expeditor_id") REFERENCES "Expeditor" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("order_id") REFERENCES "Order" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("expeditor_id") REFERENCES "Expeditor" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("user_id") REFERENCES "User" ("id");
+
+ALTER TABLE "ClientTransaction" ADD FOREIGN KEY ("cashbox_id") REFERENCES "Cashbox" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("client_cat_id") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("territory_id") REFERENCES "Territory" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("price_type_id") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("replace_id") REFERENCES "Replace" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("bonus_order_id") REFERENCES "BonusOrder" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Order" ADD FOREIGN KEY ("expeditor_id") REFERENCES "Expeditor" ("id");
+
+ALTER TABLE "OrderDetail" ADD FOREIGN KEY ("order_id") REFERENCES "Order" ("id");
+
+ALTER TABLE "OrderDetail" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "OrderDetail" ADD FOREIGN KEY ("client_cat_id") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "OrderDetail" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Defect" ADD FOREIGN KEY ("client_cat_id") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Defect" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "Defect" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "DefectDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "DefectDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "Replace" ADD FOREIGN KEY ("client_cat_id") REFERENCES "ClientCategory" ("id");
+
+ALTER TABLE "Replace" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "Replace" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Replace" ADD FOREIGN KEY ("expeditor_id") REFERENCES "Expeditor" ("id");
+
+ALTER TABLE "Replace" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "ReplaceDetail" ADD FOREIGN KEY ("replace_id") REFERENCES "Replace" ("id");
+
+ALTER TABLE "ReplaceDetail" ADD FOREIGN KEY ("order_id") REFERENCES "Order" ("id");
+
+ALTER TABLE "ReplaceDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "ReplaceDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "ReplaceDetail" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "BonusOrder" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "BonusOrder" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "BonusOrder" ADD FOREIGN KEY ("curreny_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "BonusOrder" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("bonus_order_id") REFERENCES "BonusOrder" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("bonus_id") REFERENCES "Bonus" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("order_id") REFERENCES "Order" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("curreny_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "BonusOrderDetail" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "StoreDetail" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "StoreDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "StoreDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "Purchase" ADD FOREIGN KEY ("price_type_id") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "Purchase" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "PurchaseDetail" ADD FOREIGN KEY ("purchase_id") REFERENCES "Purchase" ("id");
+
+ALTER TABLE "PurchaseDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "PurchaseDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "PurchaseDetail" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "PurchaseRefund" ADD FOREIGN KEY ("price_type_id") REFERENCES "PriceType" ("id");
+
+ALTER TABLE "PurchaseRefund" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "PurchaseRefund" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "PurchaseRefundDetail" ADD FOREIGN KEY ("purchase_id") REFERENCES "Purchase" ("id");
+
+ALTER TABLE "PurchaseRefundDetail" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");
+
+ALTER TABLE "PurchaseRefundDetail" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "PurchaseRefundDetail" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "ProductCatGroup" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "ProductCatGroup" ADD FOREIGN KEY ("unit_id") REFERENCES "Unit" ("id");
+
+ALTER TABLE "ProductGroup" ADD FOREIGN KEY ("cs_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "Visiting" ADD FOREIGN KEY ("client_id") REFERENCES "Client" ("id");
+
+ALTER TABLE "Visiting" ADD FOREIGN KEY ("agent_id") REFERENCES "Agent" ("id");
+
+ALTER TABLE "Cashbox" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Consumption" ADD FOREIGN KEY ("currency_id") REFERENCES "Currency" ("id");
+
+ALTER TABLE "Consumption" ADD FOREIGN KEY ("cashbox_id") REFERENCES "Cashbox" ("id");
+
+ALTER TABLE "Corrector" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "Corrector" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "Excretion" ADD FOREIGN KEY ("store_id") REFERENCES "Store" ("id");
+
+ALTER TABLE "Excretion" ADD FOREIGN KEY ("product_id") REFERENCES "Product" ("id");
+
+ALTER TABLE "Excretion" ADD FOREIGN KEY ("prod_cat_id") REFERENCES "ProductCategory" ("id");

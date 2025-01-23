@@ -1,0 +1,205 @@
+model PaymentMethod {
+  id Int @id @default(autoincrement())
+
+  name  String
+  code  String
+  title String
+
+  @@map("payment_method")
+}
+
+model Unit {
+  id Int @id @default(autoincrement())
+
+  name  String
+  title String
+  code  String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  orderDetails       OrderDetail[]
+  ProductCategory    ProductCategory[]
+  ProductSubCategory ProductSubCategory[]
+  Product            Product[]
+
+  @@map("unit")
+}
+
+model Region {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String
+
+  territories Territory[]
+  currencies  Currency[]
+  clients     Client[]
+
+  @@map("region")
+}
+
+model City {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String
+
+  bonuses  Bonus[]
+  defects  Defect[]
+  replaces Replace[]
+
+  @@map("city")
+}
+
+model Territory {
+  id Int @id @default(autoincrement())
+
+  name String
+  code Int?
+  sort Int?
+
+  lat Float @default(0)
+  lon Float @default(0)
+
+  isActive Boolean @default(true) @map("is_active")
+  inReport Boolean @default(true) @map("in_report")
+
+  regionId Int    @map("region_id")
+  region   Region @relation(fields: [regionId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  clients      Client[]
+  orders       Order[]
+  orderDetails OrderDetail[]
+
+  @@map("territory")
+}
+
+model Visiting {
+  id Int @id @default(autoincrement())
+
+  day      Int
+  sort     Int
+  weekType Int @default(0) @map("week_type")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("visiting")
+}
+
+model Cashbox {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  isActive Boolean @default(true) @map("is_active")
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  consumptions      Consumption[]
+  ClientTransaction ClientTransaction[]
+
+  @@map("cashbox")
+}
+
+model Consumption {
+  id Int @id @default(autoincrement())
+
+  sum     Float
+  comment String
+
+  isActive Boolean @default(true) @map("is_active")
+
+  type Int
+
+  // catParentId Int             @map("cat_parent_id")
+  // catParent   ProductCategory @relation(fields: [catChildId], references: [id])
+
+  // catChildId Int             @map("cat_child_id")
+  // catChild   ProductCategory @relation(fields: [catChildId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  cashboxId Int     @map("cashbox_id")
+  cashbox   Cashbox @relation(fields: [cashboxId], references: [id])
+
+  shipTransId Int @map("ship_trans_id")
+  // relation
+
+  dispId Int @map("disp_id")
+  // relation
+
+  date      DateTime
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Corrector {
+  id Int @id @default(autoincrement())
+
+  name    String
+  comment String
+  count   Int
+  fact    Int
+  type    Int
+  parent  Int
+  price   Float
+  armor   Float
+
+  isAvailable Boolean @default(true) @map("is_available")
+
+  productId Int      @map("product_id")
+  product   Product? @relation(fields: [productId], references: [id])
+
+  storeId Int   @map("store_id")
+  store   Store @relation(fields: [storeId], references: [id])
+
+  date      DateTime
+  timestamp DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Excretion {
+  id Int @id @default(autoincrement())
+
+  code        Int
+  date        DateTime
+  comment     String
+  count       Int
+  responsible Boolean
+
+  storeId Int   @map("store_id")
+  store   Store @relation(fields: [storeId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  prodCatId Int             @map("prod_cat_id")
+  prodCat   ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  timestamp  DateTime
+  parentTime DateTime @map("parent_time")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+}

@@ -1,0 +1,269 @@
+model Order {
+  id Int @id @default(autoincrement())
+
+  code      Int
+  count     Int
+  sum       Float
+  discount  Float @default(0)
+  status    Int
+  subStatus Int   @map("sub_status")
+
+  debt          Float    @default(0)
+  deteLoad      DateTime @map("dete_load")
+  dateDelivered DateTime @map("date_delivered")
+  dateCancel    DateTime @map("date_cancel")
+  dateStatus    DateTime @map("date_status")
+  volume        Float    @default(0)
+  comment       String
+  comment2      String
+  type          Int
+  consignment   Int
+  consigDate    DateTime @map("consig_date")
+  bonusType     Int      @map("bonus_type")
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  territoryId Int       @map("territory_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+
+  priceTypeId Int       @map("price_type_id")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  oldPriceTypeId Int @map("old_price_type_id")
+  // priceTypeOld   PriceType @relation(fields: [oldPriceTypeId], references: [id])
+
+  defectId Int @map("defect_id")
+  // relation
+
+  replaceId Int @map("replace_id")
+  // relation
+
+  bonusOrderId Int @map("bonus_order_id")
+  // relation
+
+  unitId Int @map("unit_id")
+  // relation
+
+  currencyId Int @map("currency_id")
+  // relation
+
+  agentId Int @map("agent_id")
+  // relation
+
+  contractId Int @map("contract_id")
+  // relation
+
+  storeId Int @map("store_id")
+  // relation
+
+  realId Int @map("real_id")
+  // relation
+
+  expeditorId Int @map("expeditor_id")
+  // relation
+
+  tradeId Int @map("trade_id")
+  // relation
+
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  detail  OrderDetail?
+  Price   Price?       @relation(fields: [priceId], references: [id])
+  priceId Int?
+
+  defects Defect[]
+
+  ClientTransaction ClientTransaction[]
+
+  Replace Replace[]
+
+  ReplaceDetail ReplaceDetail[]
+
+  BonusOrder   BonusOrder[]
+  DefectDetail DefectDetail[]
+}
+
+model OrderDetail {
+  id Int @id @default(autoincrement())
+
+  count Int
+  price Float
+  summa Float
+
+  volume  Float
+  date    DateTime
+  defect  Float    @default(0)
+  comment String
+
+  discount   Float @default(0)
+  discountId Int   @map("discount_id")
+
+  orderId Int   @unique @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  storeId Int @map("store_id")
+  // relation
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  cleintCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  territoryId Int       @map("territory_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
+}
+
+model Defect {
+  id Int @id @default(autoincrement())
+
+  count      Int
+  defectType Int @map("defect_type")
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  // replaceId Int     @unique @map("replace_id")
+  // replace   Replace @relation(fields: [replaceId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  cityId Int  @map("city_id")
+  city   City @relation(fields: [cityId], references: [id])
+
+  priceTypeId Int       @map("price_type_id")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  replaces Replace[]
+
+  @@map("defect")
+}
+
+model DefectDetail {
+  id Int @id @default(autoincrement())
+
+  count   Int
+  unit    Int
+  price   Float
+  sum     Float
+  volume  Float
+  reason  String
+  expDate DateTime @map("exp_date")
+
+  orderDefectId Int   @map("order_defect_id")
+  orderDefect   Order @relation(fields: [orderDefectId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+}
+
+model Replace {
+  id Int @id @default(autoincrement())
+
+  count  Int
+  status Int
+
+  reason  String
+  comment String
+
+  summa  Float
+  volume Float
+
+  date          DateTime
+  dateDelivered DateTime @map("date_delivered")
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  expeditorId Int       @map("expeditor_id")
+  expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
+
+  cityId Int  @map("city_id")
+  city   City @relation(fields: [cityId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  replaceTypeId Int         @map("replace_type")
+  replaceType   ReplaceType @relation(fields: [replaceTypeId], references: [id])
+
+  defectId Int    @map("defect_id")
+  defect   Defect @relation(fields: [defectId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  priceTypeId Int       @map("price_type")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  detail ReplaceDetail?
+}
+
+model ReplaceDetail {
+  id Int @id @default(autoincrement())
+
+  price  Float
+  sum    Float
+  volume Float
+  unit   Int
+  count  Int
+
+  prodCatId Int             @map("prod_cat_id")
+  prodCat   ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  replaceId Int     @unique @map("replace_id")
+  replace   Replace @relation(fields: [replaceId], references: [id])
+
+  storeId Int @map("store_id")
+  // store Store @relation(fields: [storeId], references: [id])
+
+  @@map("replace_detail")
+}
+
+model ReplaceType {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String
+
+  replaces Replace[]
+
+  @@map("replace_type")
+}

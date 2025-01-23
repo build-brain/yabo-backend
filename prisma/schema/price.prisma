@@ -1,0 +1,87 @@
+model Currency {
+  id Int @id @default(autoincrement())
+
+  title String
+  name  String
+  code  String
+
+  cssClass String @map("css_class")
+
+  codeId Int? @map("code_id")
+
+  regionId Int    @map("region_id")
+  region   Region @relation(fields: [regionId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  bonuses               Bonus[]
+  replaces              Replace[]
+  cashboxes             Cashbox[]
+  consumptions          Consumption[]
+  transactions          ClientTransaction[]
+  bonusOrders           BonusOrder[]
+  orderDetails          OrderDetail[]
+  purchaseDetails       PurchaseDetail[]
+  purchaseRefunds       PurchaseRefund[]
+  purchaseRefundDetails PurchaseRefundDetail[]
+
+  @@map("currency")
+}
+
+model PriceType {
+  id Int @id @default(autoincrement())
+
+  name     String
+  currency String
+  handEdit String
+
+  filial Int
+  sort   Int
+  code   Int
+
+  forClient   Int @map("for_client")
+  dealerPrice Int @default(0) @map("dealer_price")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  typeId Int @map("type_id")
+  // reation
+
+  valyutaId Int @map("valyuta_id")
+  // reation
+
+  prices Price[]
+  orders Order[]
+
+  Defect Defect[]
+
+  Bonus Bonus[]
+
+  Replace Replace[]
+
+  Purchase Purchase[]
+
+  PurchaseRefund PurchaseRefund[]
+}
+
+model Price {
+  id Int @id @default(autoincrement())
+
+  price    Float
+  currency String
+  code     Int
+  date     DateTime
+  codeDoc  Int      @map("code_doc")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  typeId Int       @map("type_id")
+  type   PriceType @relation(fields: [typeId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  orders Order[]
+}
