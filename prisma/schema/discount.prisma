@@ -1,27 +1,30 @@
 model DiscountManual {
   id Int @id @default(autoincrement())
 
-  name     String
-  comment  String
-  discount Float
-  time     DateTime
+  name    String
+  comment String? @db.Text
 
-  active Boolean @default(true)
+  discount Float
+
+  isActive Boolean @default(true) @map("is_active")
 
   agentId Int   @map("agent_id")
   agent   Agent @relation(fields: [agentId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }
 
 model Discount {
   id Int @id @default(autoincrement())
 
   name    String
-  comment String
-  value   Float
-  skidka  Float
-  parent  Int
-  budget  Float    @default(0)
-  date    DateTime
+  comment String? @db.Text
+
+  parent Int
+  value  Float
+  skidka Float
+  budget Float @default(0)
 
   dateFrom DateTime @map("date_from")
   dateTo   DateTime @map("date_to")
@@ -29,20 +32,23 @@ model Discount {
   isPublic Boolean @default(true) @map("is_public")
   isActive Boolean @default(false) @map("is_active")
 
-  priceType Int @map("price_type")
-  // relation
+  priceTypeId Int       @map("price_type")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
 
   discountTypeId Int @map("discount_type_id")
   // relation
 
-  productId Int @map("prod_id")
-  // relation
+  productId Int     @map("prod_id")
+  product   Product @relation(fields: [productId], references: [id])
 
-  clientCatId Int @map("client_cat_id")
-  // relation
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
 
-  currencyId Int @map("currency_id")
-  // relation
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
 
-  Client Client[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  clients Client[]
 }

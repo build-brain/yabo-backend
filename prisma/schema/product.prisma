@@ -22,8 +22,10 @@ model Product {
 
   // Additional data
 
-  sort        Int
-  storePeriod Int @map("store_period")
+  sort        Int?
+  storePeriod Int  @map("store_period")
+  sapCode     Int  @map("sap_code")
+  barCode     Int  @map("bar_code")
 
   subCatId Int                @map("sub_cat_id")
   subCat   ProductSubCategory @relation(fields: [subCatId], references: [id])
@@ -31,17 +33,21 @@ model Product {
   prodGrpId Int          @map("prod_grp_id")
   prodGrp   ProductGroup @relation(fields: [prodGrpId], references: [id])
 
-  ikpu    Int
-  segment Int
+  brandId Int   @map("brand_id")
+  brand   Brand @relation(fields: [brandId], references: [id])
 
-  block Int
-  pack  Int
+  producerId Int      @map("producer_id")
+  producer   Producer @relation(fields: [producerId], references: [id])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  segmentId Int
+  segment   Segment @relation(fields: [segmentId], references: [id])
 
-  sapCode   Int @map("sap_code")
-  barCode   Int @map("bar_code")
+  containerId Int       @map("container_id") // tara
+  container   Container @relation(fields: [containerId], references: [id])
+
+  ikpu      Int
+  pack      Int
+  block     Int
   csProduct Int @map("cs_product")
 
   isMml   Boolean @default(false) @map("is_mml")
@@ -50,15 +56,6 @@ model Product {
 
   tradeId Int @map("trade_id")
   // relation
-
-  brandId Int @map("brand_id")
-  // relation
-
-  producerId Int @map("producer_id")
-  // relation
-
-  taraId Int @map("tara_id")
-  // reation
 
   cdId Int @map("cd_id")
   // reation
@@ -71,6 +68,9 @@ model Product {
 
   CsRate Int @map("cs_rate")
   // reation
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   prices               Price[]
   bonuses              Bonus[]
@@ -85,6 +85,7 @@ model Product {
   Excretion            Excretion[]
 
   @@map("product")
+  Discount Discount[]
 }
 
 model ProductCategory {
@@ -98,6 +99,8 @@ model ProductCategory {
 
   unitId Int  @map("unit_id")
   unit   Unit @relation(fields: [unitId], references: [id])
+
+  partners Partner[] @relation(name: "partner_product_categories")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -124,8 +127,9 @@ model ProductSubCategory {
 
   isActive Boolean @default(true) @map("is_active")
 
-  unitId  Int       @map("unit_id")
-  unit    Unit      @relation(fields: [unitId], references: [id])
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
+
   Product Product[]
 
   @@map("product_sub_category")
@@ -152,13 +156,12 @@ model ProductCatGroup {
 
   isActive Boolean @default(true) @map("is_active")
 
-  unitId Int @map("unit_id")
-  // unit Unit     @relation(fields: [unitId], references: [id])
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
 
   productId Int     @map("product_id")
   product   Product @relation(fields: [productId], references: [id])
 
-  time      DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -169,12 +172,11 @@ model ProductGroup {
   id Int @id @default(autoincrement())
 
   name String
-  code Int
+  code String
 
   isActive Boolean @default(true) @map("is_active")
 
-  csId    Int       @map("cs_id")
-  Product Product[]
+  products Product[]
 
   @@map("product_group")
 }

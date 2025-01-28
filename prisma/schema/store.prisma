@@ -2,7 +2,8 @@ model Store {
   id Int @id @default(autoincrement())
 
   name       String
-  code       Int
+  code       String?
+
   stockman   Int
   count      Int
   vanSelling Int    @map("van_selling")
@@ -14,13 +15,13 @@ model Store {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  detail   StoreDetail?
-  Purchase Purchase[]
+  detail         StoreDetail?
+  Purchase       Purchase[]
+  PurchaseRefund PurchaseRefund[]
+  Corrector      Corrector[]
+  Excretion      Excretion[]
 
   @@map("store")
-  PurchaseRefund PurchaseRefund[]
-  Corrector Corrector[]
-  Excretion Excretion[]
 }
 
 model StoreDetail {

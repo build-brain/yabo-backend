@@ -1,69 +1,37 @@
-model Currency {
-  id Int @id @default(autoincrement())
-
-  title String
-  name  String
-  code  String
-
-  cssClass String @map("css_class")
-
-  codeId Int? @map("code_id")
-
-  regionId Int    @map("region_id")
-  region   Region @relation(fields: [regionId], references: [id])
-
-  time      DateTime
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  bonuses               Bonus[]
-  replaces              Replace[]
-  cashboxes             Cashbox[]
-  consumptions          Consumption[]
-  transactions          ClientTransaction[]
-  bonusOrders           BonusOrder[]
-  orderDetails          OrderDetail[]
-  purchaseDetails       PurchaseDetail[]
-  purchaseRefunds       PurchaseRefund[]
-  purchaseRefundDetails PurchaseRefundDetail[]
-
-  @@map("currency")
-}
-
 model PriceType {
   id Int @id @default(autoincrement())
 
-  name     String
-  currency String
-  handEdit String
+  name    String
+  type    String
+  code    String?
+  comment String? @db.Text
+  sort    Int?
 
-  filial Int
-  sort   Int
-  code   Int
+  handEdit  Boolean @default(false) @map("hand_edit")
+  forClient Boolean @default(false) @map("for_client")
 
-  forClient   Int @map("for_client")
-  dealerPrice Int @default(0) @map("dealer_price")
+  payMethodId Int           @map("valyuta_id")
+  payMethod   PaymentMethod @relation(fields: [payMethodId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  //filial Int
+  // dealerPrice Int @default(0) @map("dealer_price")
 
   isActive Boolean @default(true) @map("is_active")
 
-  typeId Int @map("type_id")
-  // reation
+  prices          Price[]
+  orders          Order[]
+  defect          Defect[]
+  bonuses         Bonus[]
+  replaces        Replace[]
+  purchases       Purchase[]
+  purchaseRefunds PurchaseRefund[]
 
-  valyutaId Int @map("valyuta_id")
-  // reation
+  Discount Discount[]
 
-  prices Price[]
-  orders Order[]
-
-  Defect Defect[]
-
-  Bonus Bonus[]
-
-  Replace Replace[]
-
-  Purchase Purchase[]
-
-  PurchaseRefund PurchaseRefund[]
+  Reciept Reciept[]
 }
 
 model Price {

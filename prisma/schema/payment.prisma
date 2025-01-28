@@ -1,0 +1,18 @@
+model PaymentMethod {
+  id Int @id @default(autoincrement())
+
+  name      String
+  code      String
+  title     String
+
+  warehouses Warehouse[] @relation("warehouse_payment_method")
+
+  priceTypes PriceType[]
+
+  @@map("payment_method")
+}
+
+enum PaymentType {
+  CASH
+  TRANSFER
+}

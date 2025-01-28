@@ -1,0 +1,85 @@
+model Replace {
+  id Int @id @default(autoincrement())
+
+  count  Int
+  status Int
+
+  reason  String
+  comment String
+
+  summa  Float
+  volume Float
+
+  date          DateTime
+  dateDelivered DateTime @map("date_delivered")
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  expeditorId Int       @map("expeditor_id")
+  expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
+
+  territoryId Int  @map("city_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  replaceTypeId Int         @map("replace_type")
+  replaceType   ReplaceType @relation(fields: [replaceTypeId], references: [id])
+
+  defectId Int    @map("defect_id")
+  defect   Defect @relation(fields: [defectId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  priceTypeId Int       @map("price_type")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  detail ReplaceDetail?
+}
+
+model ReplaceDetail {
+  id Int @id @default(autoincrement())
+
+  price  Float
+  sum    Float
+  volume Float
+  unit   Int
+  count  Int
+
+  prodCatId Int             @map("prod_cat_id")
+  prodCat   ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  replaceId Int     @unique @map("replace_id")
+  replace   Replace @relation(fields: [replaceId], references: [id])
+
+  storeId Int @map("store_id")
+  // store Store @relation(fields: [storeId], references: [id])
+
+  @@map("replace_detail")
+}
+
+model ReplaceType {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String
+
+  replaces Replace[]
+
+  @@map("replace_type")
+}

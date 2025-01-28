@@ -69,6 +69,7 @@ model Client {
 
   orders       Order[]
   orderDetails OrderDetail[]
+  applications Application[]
   defects      Defect[]
   transactions ClientTransaction[]
   replaces     Replace[]
@@ -97,6 +98,7 @@ model ClientCategory {
   replaces     Replace[]
 
   @@map("client_category")
+  Discount Discount[]
 }
 
 model ClientType {
@@ -116,7 +118,7 @@ model ClientType {
 model ClientChannel {
   id Int @id @default(autoincrement())
 
-  code String @db.VarChar(20)
+  code String? @db.VarChar(20)
   name String @db.VarChar(255)
 
   clients Client[]

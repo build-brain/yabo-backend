@@ -1,0 +1,54 @@
+model Application {
+  id Int @id @default(autoincrement())
+
+  type   ApplicationType
+  status ApplicationStatus
+
+  paymentType PaymentType @map("payment_type")
+
+  orderDate DateTime @map("order_date")
+  loadDate  DateTime @map("load_date")
+  // cancelDate DateTime @map("deliver_date")
+  // statusDate DateTime @map("status_date")
+  // consigDate DateTime @map("consig_date")
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  expeditorId Int       @map("expeditor_id")
+  expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
+
+  warehouseId Int       @map("warehouse_id")
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  volume Int
+  amount Int
+  sum    Int
+  debt   Int
+
+  noteId Int @map("note_id")
+  note  Note @relation(fields: [noteId], references: [id])
+  
+  comment  String? @db.Text
+
+  createdUserId Int  @map("created_user_id")
+  createdUser   User @relation(fields: [createdUserId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+enum ApplicationType {
+  ORDER
+  RETURN
+  REPLACE
+}
+
+enum ApplicationStatus {
+  NEW
+  DELIVERED
+  CANCELED
+}

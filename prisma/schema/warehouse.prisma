@@ -1,0 +1,69 @@
+model Warehouse {
+  id Int @id @default(autoincrement())
+
+  name     String
+  code     String?
+  codeETCN String? @map("code_etcn") // Код ЭТТН (Электронная товаротранспортная накладная)
+
+  type WarehouseType?
+
+  isActive       Boolean @default(true) @map("is_active")
+  balanceControl Boolean @default(false) @map("balance_control")
+
+  warehousemanId Int          @map("warehouseman_id")
+  warehouseman   Warehouseman @relation(fields: [warehousemanId], references: [id])
+
+  agents         Agent[]         @relation("warehouse_agent")
+  paymentMethods PaymentMethod[] @relation("warehouse_payment_method")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  Reciept   Reciept[]
+
+  @@map("warehouse")
+  applications Application[]
+}
+
+enum WarehouseType {
+  DISTRIBUTION // Склад реализации
+  RETURNS // Склад возврата
+  RESERVE // Склад резерва
+}
+
+model Supplier {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  reciepts Reciept[]
+
+  @@map("supplier")
+}
+
+model Reciept {
+  id Int @id @default(autoincrement())
+
+  date DateTime
+
+  supplierId Int      @map("supplier_id")
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  warehouseId Int       @map("warehouse_id")
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+
+  priceTypeId Int       @map("price_type_id")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // RecieptDetail RecieptDetail[]
+  
+  @@map("reciept")
+}

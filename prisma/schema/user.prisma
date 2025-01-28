@@ -1,46 +1,79 @@
 model User {
   id Int @id @default(autoincrement())
 
-  name     String
-  email    String
-  phone    String
+  firstName  String  @map("first_name")
+  lastName   String  @map("last_name")
+  middleName String? @map("middle_name")
+
+  email String
+  phone String
+
   login    String
   password String
 
+  role Role
   code Int
   pay  Int
-  role Role
 
-  codeId Int @map("code_id")
+  // codeId Int @map("code_id")
   // relation
 
-  chatId Int @map("chat_id")
+  // chatId Int @map("chat_id")
   // relation
-
-  agentId Int   @map("agent_id")
-  agent   Agent @relation(fields: [agentId], references: [id])
 
   isActive Boolean @default(true) @map("is_active")
 
-  time      DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  expeditor    Expeditor?
+  admin         Admin?
+  agent         Agent?
+  operator      Operator?
+  mashier       Cashier?
+  partner       Partner?
+  supervisor    Supervisor?
+  manager       Manager?
+  expeditor     Expeditor?
+  merchandaiser Merchandaiser?
+  warehouseman  Warehouseman?
+
   transactions ClientTransaction[]
+  applications Application[]
 
   @@map("user")
+}
+
+enum Role {
+  ADMIN
+  AGENT
+  OPERATOR
+  CASHIER
+  PARTNER
+  SUPERVISOR
+  MANAGER
+  EXPEDITOR
+  MERCHANDISER
+  WAREHOUSEMAN
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin")
 }
 
 model Agent {
   id Int @id @default(autoincrement())
 
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   filter Int
   code   Int
 
-  name         String
-  phone        String
-  email        String
   address      String
   passportCopy String @map("passport_copy")
 
@@ -51,21 +84,65 @@ model Agent {
   cashbox    Int
   vanSelling Int @map("van_selling")
 
-  isActive Boolean @default(true)
+  warehouses Warehouse[] @relation("warehouse_agent")
 
-  date      DateTime
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user            User[]
-  transactions    ClientTransaction[]
   bonuses         Bonus[]
+  defects         Defect[]
+  replaces        Replace[]
+  transactions    ClientTransaction[]
   discountManuals DiscountManual[]
-  Defect          Defect[]
-  Replace         Replace[]
-  Visiting        Visiting[]
+  visitings       Visiting[]
+
+  applications Application[]
 
   @@map("agent")
+}
+
+model Operator {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("operator")
+}
+
+model Cashier {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cashier")
+}
+
+model Partner {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  prodCats ProductCategory[] @relation(name: "partner_product_categories")
+
+  @@map("partner")
+}
+
+model Supervisor {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("supervisor")
+}
+
+model Manager {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("manager")
 }
 
 model Expeditor {
@@ -74,9 +151,11 @@ model Expeditor {
   userId Int  @unique @map("user_id")
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  name         String
-  phone        String
-  email        String
+  pinfl String @db.VarChar(14)
+
+  carBrand  String? @map("car_brand")
+  carNumber String? @map("car_num")
+
   address      String
   passportCopy String @map("passport_copy")
 
@@ -85,18 +164,37 @@ model Expeditor {
   code        Int
   defectStore Int @map("defect_store")
 
-  cityId Int @map("city_id")
-  // relation
+  territories Territory[]
 
   isActive Boolean @default(true)
 
-  time      DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   clients      Client[]
   transactions ClientTransaction[]
-  Replace      Replace[]
+  replaces     Replace[]
 
   @@map("expeditor")
+  Application Application[]
+}
+
+model Merchandaiser {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("merchandiser")
+}
+
+model Warehouseman {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  warehouses Warehouse[]
+
+  @@map("warehouseman")
 }

@@ -2,12 +2,13 @@ model Bonus {
   id Int @id @default(autoincrement())
 
   name    String
-  comment String
+  comment String? @db.Text
+
   bonus   Float
   value   Float
+
   parent  Int
   manual  Int
-  time    DateTime
 
   minCount    Float @map("min_count")
   clientCatId Int   @map("client_cat_id")
@@ -15,9 +16,10 @@ model Bonus {
   dateFrom DateTime @map("date_from")
   dateTo   DateTime @map("date_to")
 
-  maxBonus Float   @default(0) @map("max_bonus")
-  isPublic Boolean @default(true) @map("is_public")
   inBlock  Int     @default(0) @map("in_block")
+  maxBonus Float   @default(0) @map("max_bonus")
+
+  isPublic Boolean @default(true) @map("is_public")
   isActive Boolean @default(false) @map("is_active")
 
   bonusTypeId Int       @map("bonus_type_id")
@@ -38,11 +40,14 @@ model Bonus {
   agentId Int   @map("agent_id")
   agent   Agent @relation(fields: [agentId], references: [id])
 
-  cityId Int  @map("city_id")
-  city   City @relation(fields: [cityId], references: [id])
+  territoryId Int  @map("city_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   clients    Client[]
-  BonusOrder BonusOrder[]
+  bonusOrders BonusOrder[]
 
   @@map("bonus")
 }
@@ -51,7 +56,7 @@ model BonusType {
   id Int @id @default(autoincrement())
 
   name String
-  code String
+  code String? 
 
   bonuses Bonus[]
 

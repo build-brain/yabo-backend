@@ -1,12 +1,39 @@
-model PaymentMethod {
+
+
+model Currency {
   id Int @id @default(autoincrement())
 
+  title String
   name  String
   code  String
-  title String
 
-  @@map("payment_method")
+  cssClass String @map("css_class")
+
+  codeId Int? @map("code_id")
+
+  regionId Int    @map("region_id")
+  region   Region @relation(fields: [regionId], references: [id])
+
+  time      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  bonuses               Bonus[]
+  replaces              Replace[]
+  cashboxes             Cashbox[]
+  consumptions          Consumption[]
+  transactions          ClientTransaction[]
+  bonusOrders           BonusOrder[]
+  orderDetails          OrderDetail[]
+  purchaseDetails       PurchaseDetail[]
+  purchaseRefunds       PurchaseRefund[]
+  purchaseRefundDetails PurchaseRefundDetail[]
+  priceTypes PriceType[]
+  Discount Discount[]
+
+  @@map("currency")
 }
+
 
 model Unit {
   id Int @id @default(autoincrement())
@@ -21,6 +48,7 @@ model Unit {
   ProductCategory    ProductCategory[]
   ProductSubCategory ProductSubCategory[]
   Product            Product[]
+  ProductCatGroup    ProductCatGroup[]
 
   @@map("unit")
 }
@@ -36,19 +64,6 @@ model Region {
   clients     Client[]
 
   @@map("region")
-}
-
-model City {
-  id Int @id @default(autoincrement())
-
-  name String
-  code String
-
-  bonuses  Bonus[]
-  defects  Defect[]
-  replaces Replace[]
-
-  @@map("city")
 }
 
 model Territory {
@@ -71,11 +86,55 @@ model Territory {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  expeditors   Expeditor[]
   clients      Client[]
   orders       Order[]
   orderDetails OrderDetail[]
+  bonuses      Bonus[]
+  defects      Defect[]
+  replaces     Replace[]
 
   @@map("territory")
+}
+
+model Producer {
+  id Int @id @default(autoincrement())
+
+  name    String
+  country String?
+  sort    Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  products Product[]
+
+  @@map("producer")
+}
+
+model Brand {
+  id Int @id @default(autoincrement())
+
+  name String
+  sort Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  products Product[]
+
+  @@map("brand")
+}
+
+model Segment {
+  id Int @id @default(autoincrement())
+
+  name String
+  sort Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  products Product[]
+
+  @@map("segment")
 }
 
 model Visiting {
@@ -152,6 +211,8 @@ model Consumption {
   time      DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("consumption")
 }
 
 model Corrector {
@@ -178,6 +239,8 @@ model Corrector {
   timestamp DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("corrector")
 }
 
 model Excretion {
@@ -202,4 +265,149 @@ model Excretion {
   parentTime DateTime @map("parent_time")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("excretion")
+}
+
+model RefusalReason {
+  id Int @id @default(autoincrement())
+
+  name    String
+  comment String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("refusal_reason")
+}
+
+model ReturnReason {
+  id Int @id @default(autoincrement())
+
+  name    String
+  comment String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("return_reason")
+}
+
+model PhotoreportCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+  sort Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("photoreport_category")
+}
+
+model InventoryType {
+  id Int @id @default(autoincrement())
+
+  name  String
+  type  String?
+  code  String?
+  title String?
+  sort  Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  groupId Int
+  group   InventoryGroup @relation(fields: [groupId], references: [id])
+
+  @@map("inventory_type")
+}
+
+model InventoryGroup {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  isActive Boolean @default(true) @map("is_active")
+
+  types InventoryType[]
+
+  @@map("inventory_group")
+}
+
+model TaskType {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+
+  @@map("task_type")
+}
+
+model TradeDirection {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+
+  @@map("trade_direction")
+}
+
+model DistributionChannel {
+  id Int @id @default(autoincrement())
+
+  name String
+  code String?
+
+  @@map("distribution_channel")
+}
+
+model CaseType {
+  id Int @id @default(autoincrement())
+
+  name      String
+  code      String?
+  shortName String?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  @@map("case_type")
+}
+
+model KnowledgeBaseType {
+  id Int @id @default(autoincrement())
+
+  name  String
+  roles Role[]
+
+  isActive Boolean @default(true) @map("is_active")
+
+  knowledgeBases KnowledgeBase[]
+
+  @@map("knowledge_base_type")
+}
+
+model KnowledgeBase {
+  id Int @id @default(autoincrement())
+
+  title   String
+  content String @db.Text
+
+  isActive Boolean @default(true) @map("is_active")
+
+  typeId Int               @map("type_id")
+  type   KnowledgeBaseType @relation(fields: [typeId], references: [id])
+
+  roles Role[]
+
+  @@map("knowledge_base")
+}
+
+model Container {
+  id Int @id @default(autoincrement())
+
+  name String
+  sort Int?
+
+  isActive Boolean @default(true) @map("is_active")
+
+  products Product[]
+
+  @@map("container")
 }

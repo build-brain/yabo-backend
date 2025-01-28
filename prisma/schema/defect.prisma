@@ -1,0 +1,53 @@
+model Defect {
+  id Int @id @default(autoincrement())
+
+  count      Int
+  defectType Int @map("defect_type")
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  // replaceId Int     @unique @map("replace_id")
+  // replace   Replace @relation(fields: [replaceId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  agentId Int   @map("agent_id")
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  territoryId Int  @map("city_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+
+  priceTypeId Int       @map("price_type_id")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+
+  replaces Replace[]
+
+  @@map("defect")
+}
+
+model DefectDetail {
+  id Int @id @default(autoincrement())
+
+  count   Int
+  unit    Int
+  price   Float
+  sum     Float
+  volume  Float
+  reason  String
+  expDate DateTime @map("exp_date")
+
+  orderDefectId Int   @map("order_defect_id")
+  orderDefect   Order @relation(fields: [orderDefectId], references: [id])
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+}
+
