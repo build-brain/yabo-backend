@@ -2,8 +2,8 @@ model Client {
   id Int @id @default(autoincrement())
 
   name      String @db.VarChar(255)
-  comment   String @db.Text
   legalName String @map("legal_name") @db.VarChar(255)
+  comment   String? @db.Text
 
   address  String @db.VarChar(255)
   landmark String @db.VarChar(255)
@@ -68,8 +68,8 @@ model Client {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   orders       Order[]
-  orderDetails OrderDetail[]
-  applications Application[]
+  orderItems   OrderItem[]
+
   defects      Defect[]
   transactions ClientTransaction[]
   replaces     Replace[]
@@ -96,9 +96,9 @@ model ClientCategory {
   orderDetails OrderDetail[]
   defects      Defect[]
   replaces     Replace[]
+  Discount     Discount[]
 
   @@map("client_category")
-  Discount Discount[]
 }
 
 model ClientType {
@@ -119,7 +119,7 @@ model ClientChannel {
   id Int @id @default(autoincrement())
 
   code String? @db.VarChar(20)
-  name String @db.VarChar(255)
+  name String  @db.VarChar(255)
 
   clients Client[]
 

@@ -1,132 +1,64 @@
-model Order {
-  id Int @id @default(autoincrement())
+// model Order {
+//   id Int @id @default(autoincrement())
 
-  code      String?
+//   code      String?
 
-  count     Int
+//   count     Int
 
-  discount  Float @default(0)
-  sum       Float
-  status    Int
-  subStatus Int   @map("sub_status")
-  consignment   Int
-  type          Int
-  bonusType     Int      @map("bonus_type")
+//   subStatus Int   @map("sub_status")
 
-  debt          Float    @default(0)
-  deteLoad      DateTime @map("dete_load")
-  dateDelivered DateTime @map("date_delivered")
-  dateCancel    DateTime @map("date_cancel")
-  dateStatus    DateTime @map("date_status")
-  volume        Float    @default(0)
-  comment       String
-  comment2      String
-  consigDate    DateTime @map("consig_date")
+//   type          Int
+//   bonusType     Int      @map("bonus_type")
 
-  clientId Int    @map("client_id")
-  client   Client @relation(fields: [clientId], references: [id])
+//   deteLoad      DateTime @map("dete_load")
+//   dateDelivered DateTime @map("date_delivered")
+//   dateCancel    DateTime @map("date_cancel")
+//   dateStatus    DateTime @map("date_status")
+//   volume        Float    @default(0)
 
-  clientCatId Int            @map("client_cat_id")
-  clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+//   consigDate    DateTime @map("consig_date")
 
-  territoryId Int       @map("territory_id")
-  territory   Territory @relation(fields: [territoryId], references: [id])
+//   clientCatId Int            @map("client_cat_id")
+//   clientCat   ClientCategory @relation(fields: [clientCatId], references: [id])
 
-  priceTypeId Int       @map("price_type_id")
-  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
+//   territoryId Int       @map("territory_id")
+//   territory   Territory @relation(fields: [territoryId], references: [id])
 
-  oldPriceTypeId Int @map("old_price_type_id")
-  // priceTypeOld   PriceType @relation(fields: [oldPriceTypeId], references: [id])
+//   priceTypeId Int       @map("price_type_id")
+//   priceType   PriceType @relation(fields: [priceTypeId], references: [id])
 
-  defectId Int @map("defect_id")
-  // relation
+//   oldPriceTypeId Int @map("old_price_type_id")
+//   // priceTypeOld   PriceType @relation(fields: [oldPriceTypeId], references: [id])
 
-  replaceId Int @map("replace_id")
-  // relation
+//   defectId Int @map("defect_id")
+//   // relation
 
-  bonusOrderId Int @map("bonus_order_id")
-  // relation
+//   replaceId Int @map("replace_id")
+//   // relation
 
-  unitId Int @map("unit_id")
-  // relation
+//   bonusOrderId Int @map("bonus_order_id")
+//   // relation
 
-  currencyId Int @map("currency_id")
-  // relation
+//   unitId Int @map("unit_id")
+//   // relation
 
-  agentId Int @map("agent_id")
-  // relation
+//   currencyId Int @map("currency_id")
+//   // relation
 
-  contractId Int @map("contract_id")
-  // relation
 
-  storeId Int @map("store_id")
-  // relation
+//   contractId Int @map("contract_id")
+//   // relation
 
-  realId Int @map("real_id")
-  // relation
+//   realId Int @map("real_id")
+//   // relation
 
-  expeditorId Int @map("expeditor_id")
-  // relation
+//   tradeId Int @map("trade_id")
+//   // relation
 
-  tradeId Int @map("trade_id")
-  // relation
+//   detail  OrderDetail?
+//   Price   Price?       @relation(fields: [priceId], references: [id])
+//   priceId Int?
 
-  date      DateTime
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
-  detail  OrderDetail?
-  Price   Price?       @relation(fields: [priceId], references: [id])
-  priceId Int?
+// }
 
-  defects Defect[]
-
-  ClientTransaction ClientTransaction[]
-
-  Replace Replace[]
-
-  ReplaceDetail ReplaceDetail[]
-
-  BonusOrder   BonusOrder[]
-  DefectDetail DefectDetail[]
-}
-
-model OrderDetail {
-  id Int @id @default(autoincrement())
-
-  count Int
-  price Float
-  summa Float
-
-  volume  Float
-  date    DateTime
-  defect  Float    @default(0)
-  comment String
-
-  discount   Float @default(0)
-  discountId Int   @map("discount_id")
-
-  orderId Int   @unique @map("order_id")
-  order   Order @relation(fields: [orderId], references: [id])
-
-  storeId Int @map("store_id")
-  // relation
-
-  prodCatId  Int             @map("prod_cat_id")
-  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
-
-  clientId Int    @map("client_id")
-  client   Client @relation(fields: [clientId], references: [id])
-
-  clientCatId Int            @map("client_cat_id")
-  cleintCat   ClientCategory @relation(fields: [clientCatId], references: [id])
-
-  territoryId Int       @map("territory_id")
-  territory   Territory @relation(fields: [territoryId], references: [id])
-
-  currencyId Int      @map("currency_id")
-  currency   Currency @relation(fields: [currencyId], references: [id])
-
-  unitId Int  @map("unit_id")
-  unit   Unit @relation(fields: [unitId], references: [id])
-}

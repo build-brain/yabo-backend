@@ -1,15 +1,17 @@
-model Application {
+model Order {
   id Int @id @default(autoincrement())
 
-  type   ApplicationType
-  status ApplicationStatus
+  type   OrderType
+  status OrderStatus
 
-  paymentType PaymentType @map("payment_type")
+  paymentTypeId @map("payment_type")
 
-  orderDate DateTime @map("order_date")
-  loadDate  DateTime @map("load_date")
-  // cancelDate DateTime @map("deliver_date")
-  // statusDate DateTime @map("status_date")
+  orderDate  DateTime @map("order_date")
+  loadDate   DateTime @map("load_date")
+  cancelDate DateTime @map("deliver_date")
+  statusDate DateTime @map("status_date")
+
+  // consigment Int
   // consigDate DateTime @map("consig_date")
 
   agentId Int   @map("agent_id")
@@ -18,37 +20,105 @@ model Application {
   expeditorId Int       @map("expeditor_id")
   expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
 
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId Int    @map("client_id")
+
+  territory   Territory @relation(fields: [territoryId], references: [id])
+  territoryId Int       @map("territory_id")
+
   warehouseId Int       @map("warehouse_id")
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
 
-  clientId Int    @map("client_id")
-  client   Client @relation(fields: [clientId], references: [id])
+  sum      Float
+  debt     Float @default(0)
+  discount Float @default(0)
 
-  volume Int
   amount Int
-  sum    Int
-  debt   Int
+  volume Float @default(0)
 
-  noteId Int @map("note_id")
-  note  Note @relation(fields: [noteId], references: [id])
-  
-  comment  String? @db.Text
+  noteId Int       @map("note_id")
+  note   OrderNote @relation(fields: [noteId], references: [id])
+
+  comment String? @db.Text
 
   createdUserId Int  @map("created_user_id")
   createdUser   User @relation(fields: [createdUserId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  items        OrderItem[]
+  bonusOrders  BonusOrder[]
+  transactions ClientTransaction[]
+
+  defects        Defect[]
+  defectDetails  DefectDetail[]
+  replaces       Replace[]
+  replaceDetails ReplaceDetail[]
 }
 
-enum ApplicationType {
+enum OrderType {
   ORDER
   RETURN
   REPLACE
 }
 
-enum ApplicationStatus {
+enum OrderStatus {
   NEW
   DELIVERED
   CANCELED
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  count Int
+  price Float
+  summa Float
+
+  volume  Float
+  date    DateTime
+  defect  Float    @default(0)
+  comment String
+
+  discount   Float @default(0)
+  discountId Int   @map("discount_id")
+
+  orderId Int   @map("order_id")
+  order   Order @relation(fields: [orderId], references: [id])
+
+  storeId Int @map("store_id")
+  // relation
+
+  prodCatId  Int             @map("prod_cat_id")
+  productCat ProductCategory @relation(fields: [prodCatId], references: [id])
+
+  clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  clientCatId Int            @map("client_cat_id")
+  cleintCat   ClientCategory @relation(fields: [clientCatId], references: [id])
+
+  territoryId Int       @map("territory_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
+
+  currencyId Int      @map("currency_id")
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  unitId Int  @map("unit_id")
+  unit   Unit @relation(fields: [unitId], references: [id])
+}
+
+model OrderNote {
+  id Int @id @default(autoincrement())
+
+  sort    Int?
+  name    String
+  content String? @db.Text
+
+  isActive Boolean @default(true) @map("is_active")
+
+  orders Order[]
+
+  @@map("note")
 }
