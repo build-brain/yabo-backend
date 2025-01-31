@@ -1,8 +1,8 @@
 model Client {
   id Int @id @default(autoincrement())
 
-  name      String @db.VarChar(255)
-  legalName String @map("legal_name") @db.VarChar(255)
+  name      String  @db.VarChar(255)
+  legalName String  @map("legal_name") @db.VarChar(255)
   comment   String? @db.Text
 
   address  String @db.VarChar(255)
@@ -69,7 +69,6 @@ model Client {
 
   orders       Order[]
   orderItems   OrderItem[]
-
   defects      Defect[]
   transactions ClientTransaction[]
   replaces     Replace[]
@@ -91,12 +90,11 @@ model ClientCategory {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  clients      Client[]
-  orders       Order[]
-  orderDetails OrderDetail[]
-  defects      Defect[]
-  replaces     Replace[]
-  Discount     Discount[]
+  clients    Client[]
+  orderItems OrderItem[]
+  defects    Defect[]
+  replaces   Replace[]
+  Discount   Discount[]
 
   @@map("client_category")
 }

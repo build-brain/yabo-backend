@@ -83,9 +83,9 @@ model Product {
   ProductCatGroup      ProductCatGroup[]
   Corrector            Corrector[]
   Excretion            Excretion[]
+  Discount             Discount[]
 
   @@map("product")
-  Discount Discount[]
 }
 
 model ProductCategory {
@@ -106,7 +106,7 @@ model ProductCategory {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   bonusOrders           BonusOrder[]
-  orderDetails          OrderDetail[]
+  orderItems            OrderItem[]
   storeDetails          StoreDetail[]
   defectDetails         DefectDetail[]
   replaceDetails        ReplaceDetail[]

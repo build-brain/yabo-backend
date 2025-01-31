@@ -1,13 +1,13 @@
 model Store {
   id Int @id @default(autoincrement())
 
-  name       String
-  code       String?
+  name String
+  code String?
 
   stockman   Int
   count      Int
-  vanSelling Int    @map("van_selling")
-  minusCount Int    @map("minus_count")
+  vanSelling Int @map("van_selling")
+  minusCount Int @map("minus_count")
 
   isActive Boolean @default(true) @map("is_active")
 

@@ -1,5 +1,3 @@
-
-
 model Currency {
   id Int @id @default(autoincrement())
 
@@ -18,22 +16,22 @@ model Currency {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  orderItems            OrderItem[]
   bonuses               Bonus[]
+  bonusOrders           BonusOrder[]
+  discounts             Discount[]
   replaces              Replace[]
   cashboxes             Cashbox[]
   consumptions          Consumption[]
   transactions          ClientTransaction[]
-  bonusOrders           BonusOrder[]
-  orderDetails          OrderDetail[]
   purchaseDetails       PurchaseDetail[]
   purchaseRefunds       PurchaseRefund[]
   purchaseRefundDetails PurchaseRefundDetail[]
-  priceTypes PriceType[]
-  Discount Discount[]
+  priceTypes            PriceType[]
+  Price                 Price[]
 
   @@map("currency")
 }
-
 
 model Unit {
   id Int @id @default(autoincrement())
@@ -44,11 +42,11 @@ model Unit {
 
   isActive Boolean @default(true) @map("is_active")
 
-  orderDetails       OrderDetail[]
-  ProductCategory    ProductCategory[]
-  ProductSubCategory ProductSubCategory[]
-  Product            Product[]
-  ProductCatGroup    ProductCatGroup[]
+  orderItems           OrderItem[]
+  products             Product[]
+  productCategories    ProductCategory[]
+  productSubCategories ProductSubCategory[]
+  productCatGroups     ProductCatGroup[]
 
   @@map("unit")
 }
@@ -86,13 +84,13 @@ model Territory {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  expeditors   Expeditor[]
-  clients      Client[]
-  orders       Order[]
-  orderDetails OrderDetail[]
-  bonuses      Bonus[]
-  defects      Defect[]
-  replaces     Replace[]
+  expeditors Expeditor[]
+  clients    Client[]
+  orders     Order[]
+  orderItems OrderItem[]
+  bonuses    Bonus[]
+  defects    Defect[]
+  replaces   Replace[]
 
   @@map("territory")
 }

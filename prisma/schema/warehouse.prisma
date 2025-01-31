@@ -16,12 +16,13 @@ model Warehouse {
   agents         Agent[]         @relation("warehouse_agent")
   paymentMethods PaymentMethod[] @relation("warehouse_payment_method")
 
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  Reciept   Reciept[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  reciepts Reciept[]
+  Order    Order[]
 
   @@map("warehouse")
-  applications Application[]
 }
 
 enum WarehouseType {
@@ -64,6 +65,6 @@ model Reciept {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // RecieptDetail RecieptDetail[]
-  
+
   @@map("reciept")
 }

@@ -4,7 +4,8 @@ model Order {
   type   OrderType
   status OrderStatus
 
-  paymentTypeId @map("payment_type")
+  priceTypeId Int       @map("payment_type")
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id])
 
   orderDate  DateTime @map("order_date")
   loadDate   DateTime @map("load_date")
@@ -20,11 +21,11 @@ model Order {
   expeditorId Int       @map("expeditor_id")
   expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
 
-  client   Client @relation(fields: [clientId], references: [id])
   clientId Int    @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
 
-  territory   Territory @relation(fields: [territoryId], references: [id])
   territoryId Int       @map("territory_id")
+  territory   Territory @relation(fields: [territoryId], references: [id])
 
   warehouseId Int       @map("warehouse_id")
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id])

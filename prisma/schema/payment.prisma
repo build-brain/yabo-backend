@@ -1,9 +1,9 @@
 model PaymentMethod {
   id Int @id @default(autoincrement())
 
-  name      String
-  code      String
-  title     String
+  name  String
+  code  String
+  title String
 
   warehouses Warehouse[] @relation("warehouse_payment_method")
 
@@ -25,7 +25,7 @@ model PriceType {
   code    String?
   comment String? @db.Text
 
-  type    DealType
+  type DealType
 
   handEdit  Boolean @default(false) @map("hand_edit")
   forClient Boolean @default(false) @map("for_client")
@@ -48,10 +48,10 @@ model PriceType {
   replaces        Replace[]
   purchases       Purchase[]
   purchaseRefunds PurchaseRefund[]
+  discounts       Discount[]
+  reciepts        Reciept[]
 
-  Discount Discount[]
-
-  Reciept Reciept[]
+  @@map("price_type")
 }
 
 enum DealType {
@@ -62,26 +62,26 @@ enum DealType {
 model Price {
   id Int @id @default(autoincrement())
 
-  price    Float
-  code     String
-  codeDoc  Int      @map("code_doc")
+  price   Float
+  code    String
+  codeDoc Int    @map("code_doc")
 
   isActive Boolean @default(true) @map("is_active")
 
   typeId Int       @map("type_id")
   type   PriceType @relation(fields: [typeId], references: [id])
 
+  currencyId Int      @map("currency_id")
   currency   Currency @relation(fields: [currencyId], references: [id])
-  currencyId Int @map("currency_id")
 
   productId Int     @map("product_id")
   product   Product @relation(fields: [productId], references: [id])
 
-  date     DateTime
+  date      DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  orders Order[]
+  // orders Order[]
 
   @@map("price")
 }

@@ -19,7 +19,7 @@ model Replace {
   expeditorId Int       @map("expeditor_id")
   expeditor   Expeditor @relation(fields: [expeditorId], references: [id])
 
-  territoryId Int  @map("city_id")
+  territoryId Int       @map("city_id")
   territory   Territory @relation(fields: [territoryId], references: [id])
 
   clientId Int    @map("client_id")

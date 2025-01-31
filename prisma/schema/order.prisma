@@ -45,7 +45,6 @@
 //   currencyId Int @map("currency_id")
 //   // relation
 
-
 //   contractId Int @map("contract_id")
 //   // relation
 
@@ -59,6 +58,4 @@
 //   Price   Price?       @relation(fields: [priceId], references: [id])
 //   priceId Int?
 
-
 // }
-

@@ -38,7 +38,7 @@ model User {
   warehouseman  Warehouseman?
 
   transactions ClientTransaction[]
-  applications Application[]
+  Order        Order[]
 
   @@map("user")
 }
@@ -92,8 +92,7 @@ model Agent {
   transactions    ClientTransaction[]
   discountManuals DiscountManual[]
   visitings       Visiting[]
-
-  applications Application[]
+  Order           Order[]
 
   @@map("agent")
 }
@@ -174,9 +173,9 @@ model Expeditor {
   clients      Client[]
   transactions ClientTransaction[]
   replaces     Replace[]
+  Order        Order[]
 
   @@map("expeditor")
-  Application Application[]
 }
 
 model Merchandaiser {

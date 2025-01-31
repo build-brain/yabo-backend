@@ -19,7 +19,7 @@ model Defect {
   agentId Int   @map("agent_id")
   agent   Agent @relation(fields: [agentId], references: [id])
 
-  territoryId Int  @map("city_id")
+  territoryId Int       @map("city_id")
   territory   Territory @relation(fields: [territoryId], references: [id])
 
   priceTypeId Int       @map("price_type_id")
@@ -50,4 +50,3 @@ model DefectDetail {
   prodCatId  Int             @map("prod_cat_id")
   productCat ProductCategory @relation(fields: [prodCatId], references: [id])
 }
-
