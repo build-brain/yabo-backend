@@ -5,10 +5,10 @@ model User {
   lastName   String  @map("last_name")
   middleName String? @map("middle_name")
 
-  email String
-  phone String
+  email String?
+  phone String?
 
-  login    String
+  login    String @unique
   password String
 
   role Role

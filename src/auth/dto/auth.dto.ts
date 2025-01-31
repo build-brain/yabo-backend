@@ -8,7 +8,7 @@ export class AuthDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'proffesor_xvaier' })
-  readonly username: string;
+  readonly login: string;
 
   @IsString()
   @IsNotEmpty()

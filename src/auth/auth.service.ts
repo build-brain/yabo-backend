@@ -1,16 +1,11 @@
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcryptjs';
 import { AuthEntity } from './entities';
 import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto';
 import { JwtPayload } from './types';
-import { RegisterUsersDto } from './dto/register-user.dto';
-import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +17,7 @@ export class AuthService {
 
   async login(data: AuthDto): Promise<AuthEntity> {
     const user = await this.prisma.user.findUniqueOrThrow({
-      where: { username: data.username },
+      where: { login: data.login },
     });
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
@@ -30,7 +25,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const payload: JwtPayload = { sub: user.id, username: user.username, role: user.role };
+    const payload: JwtPayload = {
+      sub: user.id,
+      login: user.login,
+      role: user.role,
+    };
 
     const accessToken = await this.generateToken(
       payload,
@@ -47,12 +46,12 @@ export class AuthService {
       accessToken,
       refreshToken,
       userId: user.id,
-      username: user.username,
+      login: user.login,
       userRole: user.role,
     };
   }
 
-  async refresh(userId: string, oldRefreshToken: string) {
+  async refresh(userId: number, oldRefreshToken: string) {
     if (!userId) {
       throw new UnauthorizedException('Invalid user ID');
     }
@@ -75,65 +74,11 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token is expired or invalid');
     }
 
-    const payload: JwtPayload = { sub: user.id, username: user.username, role: user.role };
-
-    const accessToken = await this.generateToken(
-      payload,
-      'JWT_ACCESS_SECRET',
-      'JWT_ACCESS_EXPIRE',
-    );
-    const refreshToken = await this.generateToken(
-      payload,
-      'JWT_REFRESH_SECRET',
-      'JWT_REFRESH_EXPIRE',
-    );
-
-    return {
-      accessToken,
-      refreshToken,
+    const payload: JwtPayload = {
+      sub: user.id,
+      login: user.login,
+      role: user.role,
     };
-  }
-  async register(createDto: RegisterUsersDto): Promise<any> {
-    const hashedPassword = await bcrypt.hash(createDto.password, 10);
-
-    const user = await this.prisma.user.create({
-      data: {
-        password: hashedPassword,
-        ...createDto
-      }
-    });
-
-    const payload: JwtPayload = { sub: user.id, username: user.username, role: user.role };
-
-    const accessToken = await this.generateToken(
-      payload,
-      'JWT_ACCESS_SECRET',
-      'JWT_ACCESS_EXPIRE',
-    );
-    const refreshToken = await this.generateToken(
-      payload,
-      'JWT_REFRESH_SECRET',
-      'JWT_REFRESH_EXPIRE',
-    );
-
-    return {
-      accessToken,
-      refreshToken,
-    };
-  }
-  async addAdmin(createDto: RegisterUsersDto): Promise<any> {
-
-    const hashedPassword = await bcrypt.hash(createDto.password, 10);
-
-    const user = await this.prisma.user.create({
-      data: {
-        password: hashedPassword,
-        role: Role.ADMIN,
-        ...createDto
-      }
-    });
-
-    const payload: JwtPayload = { sub: user.id, username: user.username, role: user.role };
 
     const accessToken = await this.generateToken(
       payload,

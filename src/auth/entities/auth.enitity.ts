@@ -12,10 +12,10 @@ export class AuthEntity {
   refreshToken: string;
 
   @ApiProperty({ readOnly: true })
-  userId?: string;
+  userId?: number;
 
   @ApiProperty({ readOnly: true })
-  username?: string;
+  login?: string;
 
   @ApiProperty({ readOnly: true })
   userRole?: Role;
