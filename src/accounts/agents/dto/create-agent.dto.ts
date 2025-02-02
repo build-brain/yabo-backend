@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDate,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsPositive,
@@ -49,7 +50,7 @@ export class CreateAgentDto {
     description: 'Passport copy',
     example: '1234567890',
   })
-  passortCopy: string;
+  passportCopy: string;
 
   @IsDate()
   @Type(() => Date)
@@ -67,7 +68,7 @@ export class CreateAgentDto {
   })
   firstVisit: Date;
 
-  @IsNumber()
+  @IsInt()
   @IsPositive()
   @ApiProperty({
     description: 'Audit identifier',
@@ -75,7 +76,7 @@ export class CreateAgentDto {
   })
   audit: number;
 
-  @IsNumber()
+  @IsInt()
   @IsPositive()
   @ApiProperty({
     description: 'Cashbox identifier',
@@ -83,7 +84,7 @@ export class CreateAgentDto {
   })
   cashbox: number;
 
-  @IsNumber()
+  @IsInt()
   @IsPositive()
   @ApiProperty({
     description: 'Van selling identifier',

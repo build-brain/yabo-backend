@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Agent } from '@prisma/client';
+import { UserEntity } from 'src/accounts/users/entity';
 
 export class AgentEntity implements Agent {
+  constructor({ ...data }: Partial<AgentEntity>) {
+    Object.assign(this, data);
+  }
+
   @ApiProperty({
     description: 'Unique identifier of the agent',
     example: 1,
