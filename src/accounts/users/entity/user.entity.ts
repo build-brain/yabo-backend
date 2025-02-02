@@ -6,11 +6,6 @@ export class UserEntity implements User {
   constructor({ ...data }: Partial<UserEntity>) {
     Object.assign(this, data);
   }
-    email: string;
-    login: string;
-    code: number;
-    pay: number;
-    isActive: boolean;
 
   @ApiProperty({
     description: 'Unique identifier of the user',
@@ -19,10 +14,10 @@ export class UserEntity implements User {
   id: number;
 
   @ApiProperty({
-    description: "User's phone number",
-    example: '+1234567890',
+    description: 'User login',
+    example: 'user123',
   })
-  phone: string;
+  login: string;
 
   @Exclude()
   password: string;
@@ -47,30 +42,43 @@ export class UserEntity implements User {
   middleName: string;
 
   @ApiProperty({
-    description: "User's birthdate",
-    type: String,
-    example: '2000-01-01',
+    description: 'Email address of the user',
+    example: 'user@example.com',
+    required: false,
   })
-  birthDate: Date;
+  email: string;
 
   @ApiProperty({
-    description: 'District identifier associated with the user',
-    example: 101,
+    description: "User's phone number",
+    example: '+1234567890',
+    required: false,
   })
-  districtId: number;
-
-  @ApiProperty({
-    description: 'Residential address of the user',
-    example: '123 Main St, Springfield',
-  })
-  address: string;
+  phone: string;
 
   @ApiProperty({
     description: "User's role in the system",
     enum: $Enums.Role,
-    example: $Enums.Role.ADMIN,
+    example: $Enums.Role.AGENT,
   })
   role: $Enums.Role;
+
+  @ApiProperty({
+    description: 'User code',
+    example: 12345,
+  })
+  code: number;
+
+  @ApiProperty({
+    description: 'User pay',
+    example: 1000,
+  })
+  pay: number;
+
+  @ApiProperty({
+    description: 'User is active',
+    example: true,
+  })
+  isActive: boolean;
 
   @ApiProperty({
     description: 'Record creation timestamp',

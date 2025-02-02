@@ -39,18 +39,11 @@ export class UsersService {
       search,
       page,
       perPage,
-      gender,
       role,
-      birthDate,
-      districtId,
-      regionId,
       createdDate,
       byId,
       byBirthDate,
-      byGender,
       byRole,
-      byDistrictId,
-      byRegionId,
       byCreatedDate,
     } = params;
 
@@ -62,11 +55,7 @@ export class UsersService {
           { middleName: { contains: search, mode: 'insensitive' } },
         ],
       }),
-      ...(gender && { gender: gender }),
       ...(role && { role: role }),
-      ...(birthDate && { birthDate: birthDate }),
-      ...(districtId && { districtId: districtId }),
-      ...(regionId && { district: { regionId: regionId } }),
       ...(createdDate && {
         createdAt: {
           gte: new Date(createdDate.setHours(0, 0, 0, 0)),
@@ -77,25 +66,12 @@ export class UsersService {
 
     const orderBy: Prisma.UserOrderByWithRelationInput = {
       ...(byId && { id: byId }),
-      ...(byGender && { gender: byGender }),
       ...(byRole && { role: byRole }),
       ...(byBirthDate && { birthDate: byBirthDate }),
-      ...(byDistrictId && { districtId: byDistrictId }),
-      ...(byRegionId && { district: { regionId: byRegionId } }),
       ...(byCreatedDate && { createdAt: byCreatedDate }),
     };
 
-    const include: any = {
-      district: {
-        include: {
-          region: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      },
-    };
+    const include: any = {};
 
     return paginate(
       this.prisma.user,
@@ -107,17 +83,7 @@ export class UsersService {
   async findOne(id: number) {
     return await this.prisma.user.findUniqueOrThrow({
       where: { id },
-      include: {
-        district: {
-          include: {
-            region: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: {},
     });
   }
 
@@ -126,17 +92,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id },
       data,
-      include: {
-        district: {
-          include: {
-            region: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: {},
     });
   }
 
