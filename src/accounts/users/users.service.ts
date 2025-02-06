@@ -4,13 +4,14 @@ import { PrismaService } from 'nestjs-prisma';
 import * as bcrypt from 'bcryptjs';
 import { PaginateFunction, paginator } from 'src/common/pagination';
 import { CreateUserDto, UserQueryParamsDto, UpdateUserDto } from './dto';
+import { PaginatedUsersEntity, UserEntity } from './entity';
 
 const paginate: PaginateFunction = paginator({ perPage: 10 });
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
-  async create(data: CreateUserDto) {
+  async create(data: CreateUserDto): Promise<UserEntity> {
     try {
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -34,7 +35,7 @@ export class UsersService {
     }
   }
 
-  async findAll(params: UserQueryParamsDto) {
+  async findAll(params: UserQueryParamsDto): Promise<PaginatedUsersEntity> {
     const {
       search,
       page,
@@ -80,15 +81,14 @@ export class UsersService {
     );
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<UserEntity> {
     return await this.prisma.user.findUniqueOrThrow({
       where: { id },
       include: {},
     });
   }
 
-  async update(id: number, data: UpdateUserDto) {
-    await this.prisma.user.findUniqueOrThrow({ where: { id } });
+  async update(id: number, data: UpdateUserDto): Promise<UserEntity> {
     return await this.prisma.user.update({
       where: { id },
       data,
@@ -96,7 +96,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<UserEntity> {
     await this.prisma.user.findUniqueOrThrow({ where: { id } });
     return await this.prisma.user.delete({ where: { id } });
   }
